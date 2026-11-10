@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>진로경로 설계소 · 교사용 대시보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f2f7f4;--card:#fff;--ink:#1b2a25;--muted:#5b6c65;--line:#d3dfd8;--accent:#17795e;--accent-d:#0f5c47;--lime:#cdf26b;--warn:#b8451f;--warn-bg:#fdeee7;--ok:#1c7a4f;--ok-bg:#e3f5ea;
+ --b1:#2e9db8;--b2:#e98f3c;--b3:#8963bf;--disp:'Jua','Noto Sans KR','Malgun Gothic',sans-serif;--body:'Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;color-scheme:light}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;padding:0 max(16px,env(safe-area-inset-right)) 60px max(16px,env(safe-area-inset-left))}
+h1,h2,h3{margin:0;line-height:1.3}p{margin:0}button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #f2a900;outline-offset:2px;border-radius:6px}
+.wrap{max-width:1100px;margin:0 auto}.muted{color:var(--muted)}.small{font-size:13px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;background:var(--accent);color:#fff;font-weight:700;padding:8px 14px;cursor:pointer;min-height:38px}
+.btn:hover{background:var(--accent-d)}.btn:disabled{opacity:.5;cursor:default}
+.btn.ghost{background:#fff;color:var(--accent-d);border:1.5px solid var(--accent)}.btn.ghost:hover{background:#eaf7f1}
+.btn.sm{padding:4px 10px;min-height:30px;font-size:13.5px;border-radius:8px}
+input[type=text],input[type=password],textarea,select{width:100%;border:1.5px solid #b9c9c0;border-radius:10px;padding:8px 10px;background:#fff;min-width:0}
+textarea{min-height:90px;resize:vertical}select.inl{width:auto;padding:5px 8px}
+.login{max-width:420px;margin:12vh auto 0;display:flex;flex-direction:column;gap:14px}.login h1{font-family:var(--disp);font-weight:400;font-size:28px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}.col{display:flex;flex-direction:column;gap:10px}
+.err{color:var(--warn);font-weight:700;min-height:1.4em;font-size:14px}
+header.top{position:sticky;top:0;z-index:6;background:var(--paper);padding:12px 0 8px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+header.top h1{font-family:var(--disp);font-weight:400;font-size:22px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:10px 0}.tab{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 14px;font-weight:700;cursor:pointer;font-size:14px}
+.tab[aria-selected="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+main{display:flex;flex-direction:column;gap:16px;padding-top:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;min-width:0}
+.card h2{font-family:var(--disp);font-weight:400;font-size:20px;margin-bottom:2px}.card h3{font-size:15px;margin:14px 0 6px}.sub{color:var(--muted);font-size:13.5px;margin-bottom:10px}
+.grid3{display:grid;gap:12px;grid-template-columns:repeat(4,minmax(0,1fr))}.two{display:grid;gap:14px;grid-template-columns:1fr 1fr}
+@media(max-width:820px){.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}.two{grid-template-columns:1fr}}
+.stat{background:#f4f8f6;border-radius:12px;padding:10px 12px}.stat b{display:block;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}.stat span{font-size:13px;color:var(--muted)}
+.tag{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;font-weight:700;background:#e8efeb}.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{background:#eef3f0;border-radius:999px;padding:2px 10px;font-size:13.5px}.chip b{margin-left:4px;color:var(--accent-d)}
+.br{display:grid;grid-template-columns:minmax(80px,170px) 1fr 90px;gap:8px;align-items:center;margin:4px 0;font-size:14px}
+.br .bl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.br .bt{height:16px;background:#e8efeb;border-radius:8px;overflow:hidden}.br .bt i{display:block;height:100%;background:var(--bc,var(--accent));border-radius:8px}.br .bn{text-align:right;font-variant-numeric:tabular-nums;font-size:13.5px}
+.tbl{overflow-x:auto;border-radius:10px;border:1px solid var(--line)}table{border-collapse:collapse;width:100%;background:#fff;font-size:14px}
+th,td{border-bottom:1px solid #e1e9e4;padding:7px 9px;text-align:left;vertical-align:top}th{background:#eaf3ee;font-weight:700;white-space:nowrap}
+td.n,th.n{text-align:center;white-space:nowrap}td.w{min-width:200px;white-space:pre-wrap}tr.click{cursor:pointer}tr.click:hover td{background:#f4faf7}
+td.h{text-align:center;font-weight:700}.note{background:#f7f9d9;border-radius:10px;padding:8px 12px;font-size:13.5px}
+.demo{background:var(--warn-bg);border:1px dashed var(--warn);border-radius:10px;padding:8px 12px;font-size:13.5px;color:#7a2c10}
+.empty{color:var(--muted);padding:14px;text-align:center;background:#f4f8f6;border-radius:10px}
+.ov{position:fixed;inset:0;background:rgba(15,30,25,.5);z-index:20;display:flex;justify-content:center;align-items:flex-start;padding:24px 12px;overflow:auto}
+.ov .box{background:#fff;border-radius:16px;max-width:900px;width:100%;padding:18px;display:flex;flex-direction:column;gap:12px}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#1b2a25;color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;z-index:50;max-width:90vw}
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px 4px;margin:6px 0}.ar{align-self:center;color:#6b7d75;font-style:normal;font-weight:700}
+.fn{display:flex;flex-direction:column;justify-content:center;text-align:center;border-radius:12px;padding:6px 10px;min-width:80px;max-width:180px;font-size:13.5px;background:#dfe6e2;border:1.5px solid rgba(0,0,0,.12);line-height:1.35}
+.fn small{display:block;font-size:11.5px;color:#3d4d46}.fn.hs{background:#f9d79b}.fn.univ{background:#a9d8f0}.fn.cert{background:#cdbdf0}.fn.work{background:#a8e0b4}.fn.grow{background:#f7b9c8}
+.fn.start{background:#e3f1ff;border-radius:999px}.fn.goal{background:#ffc9d6;border-radius:999px;font-weight:700}.fn.dec{background:#cfe6ff;border:2px solid #4b8fd1}
+.fn.multi{background:transparent;border:0;padding:0;gap:3px;align-items:stretch}.fn.multi span{display:block;background:#f9d79b;border:1.5px solid rgba(0,0,0,.12);border-radius:10px;padding:3px 8px}
+.fn.multi.m span{background:#e6ece8}.fn.multi.u span{background:#a9d8f0}.fn.multi.c span{background:#cdbdf0}.fn.multi.w span{background:#a8e0b4}
+pre.out{white-space:pre-wrap;background:#f4f8f6;border-radius:10px;padding:10px 12px;font-family:var(--body);font-size:14px;max-height:480px;overflow:auto}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="login" class="login" hidden>
+    <h1>진로경로 설계소 · 교사용</h1>
+    <p class="muted">학생이 제출한 진로경로, 커리어패스 양식, 점검 글을 모아 보고 분석해요.</p>
+    <form id="lform" class="panel col" autocomplete="off">
+      <label for="tcode" style="font-weight:700">교사 코드</label>
+      <input type="password" id="tcode" autocomplete="off" placeholder="시트 ‘설정’ 탭의 교사코드">
+      <div class="err" id="lerr" role="alert"></div>
+      <button class="btn" type="submit" id="lbtn">들어가기</button>
+    </form>
+  </section>
+  <div id="app" hidden>
+    <header class="top"><h1>진로경로 설계소 · 교사용 대시보드</h1>
+      <div class="row"><label class="small muted" for="fClass">학급</label><select id="fClass" class="inl"></select>
+        <button class="btn ghost sm" data-act="refresh" id="rbtn">새로고침</button>
+        <a class="btn ghost sm" id="padA" target="_blank" rel="noopener" style="text-decoration:none">패들렛 ↗</a>
+        <button class="btn ghost sm" data-act="logout">나가기</button></div></header>
+    <div id="demoBar" class="demo" style="margin-top:10px" hidden>예시 데이터 화면이에요. 실제 학생 자료가 아닙니다.</div>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+    <main id="view"></main>
+  </div>
+</div>
+<div id="ov" class="ov" hidden></div><div class="toast" id="toast" hidden></div>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbwZepe-LhCDFaslcHQTALP2lbZq6vLvDgiI0w2zlkug4D0EgwKQawW7cJvhLBphfa2b/exec";
+const PADLET_URL="https://padlet.com/dgkim1013_1/padlet-s024jjsrwj7e9iu41pq3";
+const DEMO=!API_URL||location.hash==='#demo';
+const STG=[['mid','중학교','m'],['hs','고등학교',''],['univ','대학교','u'],['post','대학 이후','c'],['work','취직','w']];
+const ROWS=[['path','경로'],['req','요구조건'],['qual','필요 자격'],['act','학교 내/외 진로활동']];
+const STAGE_KO={hs:'고등학교',univ:'대학·대학원',cert:'자격·시험·수련',work:'취업·창업',grow:'자기계발·재진학',etc:'기타'};
+const TABS=[['status','제출 현황'],['stats','경로 통계'],['form','커리어패스 양식'],['stu','학생별 보기'],['ai','AI 분석·내보내기']];
+const TAGS=['일반고','특성화고','마이스터고','특목고·자사고','전문대','4년제 대학교','대학원','편입','방송·사이버대','학점은행제','자격·면허시험','인턴·수련','취업','창업·개업','재취업·이직','유학'];
+
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const filled=v=>String(v==null?'':v).trim().length>0,norm=s=>String(s||'').replace(/\s+/g,'').replace(/[.,!?~]+$/,'').toLowerCase();
+const pct=(n,d)=>d?Math.round(n*100/d):0,avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:0,f1=n=>(Math.round(n*10)/10).toFixed(1);
+const fmtAt=ms=>{if(!ms)return'';const d=new Date(ms);return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`};
+const lines=t=>String(t||'').split('\n').map(x=>x.trim()).filter(Boolean);
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
+function counter(){const m=new Map();return{add(l){l=String(l||'').trim();const k=norm(l);if(!k)return;const e=m.get(k)||{n:0,lab:{}};e.n++;e.lab[l]=(e.lab[l]||0)+1;m.set(k,e)},top(n){return[...m.values()].map(e=>({label:Object.entries(e.lab).sort((a,b)=>b[1]-a[1])[0][0],n:e.n})).sort((a,b)=>b.n-a.n||a.label.localeCompare(b.label,'ko')).slice(0,n||999)}}}
+const STOP=new Set(['그리고','하지만','때문','정도','내가','나는','나의','우리','너무','매우','조금','항상','가끔','다른','이런','그런','어떤','많이','것','수','등','때','위해','통해','대해','같은','먼저','다시']);
+function wordFreq(texts,n){const c=counter();texts.forEach(t=>{(String(t||'').match(/[가-힣A-Za-z0-9]{2,}/g)||[]).forEach(w=>{w=w.replace(/(에서는|에서|으로|에게|하고|하는|한다|합니다|해요|하기|하여|해서|있다|있는|없다|없는|하면|하며|입니다|에는|에도|까지|부터|한|할|함|은|는|이|가|을|를|에|의|도|로|과|와|고|며|다|요)$/,'');if(w.length<2||STOP.has(w))return;c.add(w)})});return c.top(n)}
+function bar(l,n,max,total,color){return `<div class="br"><span class="bl" title="${esc(l)}">${esc(l)}</span><span class="bt"><i style="width:${max?Math.round(n*100/max):0}%;${color?`--bc:${color}`:''}"></i></span><span class="bn">${n}${total?` (${pct(n,total)}%)`:''}</span></div>`}
+function bars(items,total,color){if(!items.length)return'<div class="empty">아직 자료가 없어요.</div>';const mx=Math.max(...items.map(i=>i.n));return items.map(i=>bar(i.label,i.n,mx,total,color)).join('')}
+function chips(items){return items.length?`<div class="chips">${items.map(i=>`<span class="chip">${esc(i.label)}<b>${i.n}</b></span>`).join('')}</div>`:'<div class="empty">아직 자료가 없어요.</div>'}
+const table=(heads,rows)=>rows.length?`<div class="tbl"><table><thead><tr>${heads.map(h=>`<th class="${h[1]||''}">${h[0]}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`:'<div class="empty">아직 자료가 없어요.</div>';
+
+/* ===== 서버 ===== */
+let AUTH={};
+async function A(a,p){if(DEMO)return demoApi(a,p||{});const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({a,p:p||{},auth:AUTH})});const j=await res.json();if(j&&j.error){const e=new Error(j.error.message);e.code=j.error.code;throw e}return j}
+
+/* ===== 자료 가공 ===== */
+let DATA={rows:[]},TAB='status',CLS='all';
+function summ(nodes,goal){const a=(nodes||[]).map(n=>n.t==='dec'?`◆${n.q||'갈림길'}(NO→${n.no||'?'})`:(n.title||'')).filter(Boolean);if(goal)a.push(goal);return a.join(' → ')}
+function flowHTML(nodes,goal){const p=['<div class="fn start">출발</div>'];(nodes||[]).forEach(n=>p.push(n.t==='dec'?`<div class="fn dec"><b>◆ ${esc(n.q)}?</b><small>NO → ${esc(n.no||'')}</small></div>`:`<div class="fn ${n.stage||''}">${esc(n.title)}${n.memo?`<small>${esc(n.memo)}</small>`:''}</div>`));p.push(`<div class="fn goal">♥ ${esc(goal||'')}</div>`);return `<div class="flow">${p.join('<i class="ar">→</i>')}</div>`}
+function prep(rows){return rows.map(r=>{const d=r.data||{},A_=(d.pathA||{}),B_=(d.pathB||{}),cp=d.careerpath||{},R=d.reflect||{};
+  return{id:r.id,uid:r.uid,g:r.g,c:r.c,no:r.no,name:r.name,at:r.at,note:r.note||'',ok:!!r.ok,d,goal:d.goal||'',aN:A_.nodes||[],bN:B_.nodes||[],aT:A_.tags||[],bT:B_.tags||[],cp,cells:cp.cells||{},R,res:d.research||[],
+    aStep:(A_.nodes||[]).filter(n=>n.t==='step').length,aDec:(A_.nodes||[]).filter(n=>n.t==='dec').length,filled:Number(cp.filled)||0}}).sort((a,b)=>a.g-b.g||a.c-b.c||a.no-b.no)}
+const clsKey=x=>`${x.g}-${x.c}`,inCls=x=>CLS==='all'||clsKey(x)===CLS,cur=()=>prep(DATA.rows).filter(inCls),who=x=>`${x.g}-${x.c}-${x.no}`;
+
+/* ===== 제출 현황 ===== */
+function vStatus(P){const byC={};P.forEach(p=>byC[clsKey(p)]=(byC[clsKey(p)]||0)+1);const items=Object.entries(byC).sort().map(([k,n])=>({label:k.replace('-','학년 ')+'반',n}));
+  const rows=P.map(p=>`<tr class="click" data-open="${esc(p.uid)}"><td class="n">${who(p)}</td><td>${esc(p.name)}</td><td>${esc(p.goal)}</td><td class="n">${p.aStep}${p.aDec?`+◆${p.aDec}`:''}</td><td class="n">${p.bN.length?'○':''}</td><td class="n">${p.filled}/20</td><td class="n">${fmtAt(p.at)}</td><td class="n">${p.ok?'<span class="tag ok">확인</span>':''}</td></tr>`);
+  return `<div class="card"><h2>제출 현황</h2><p class="sub">학생이 가입 없이 제출하므로 ‘미제출 명단’은 보이지 않아요. 학급 인원수와 비교해 확인하세요. 같은 학생이 다시 제출하면 가장 최근 제출만 보여요.</p>
+  <div class="grid3"><div class="stat"><b>${P.length}</b><span>제출한 학생</span></div><div class="stat"><b>${pct(P.filter(p=>p.bN.length).length,P.length)}%</b><span>경로 B(플랜 B) 작성</span></div><div class="stat"><b>${f1(avg(P.map(p=>p.filled)))}</b><span>양식 평균 작성 칸 (20칸)</span></div><div class="stat"><b>${P.filter(p=>p.res.length).length}</b><span>정보 조사 기록 작성</span></div></div>
+  <h3>학급별 제출 수</h3>${bars(items,0,'var(--b1)')}<h3>제출한 학생 (줄을 누르면 자세히 보기)</h3>${table([['번호','n'],['이름'],['목표 직업'],['경로A 단계','n'],['B','n'],['양식 칸','n'],['제출','n'],['확인','n']],rows)}</div>`}
+
+/* ===== 경로 통계 ===== */
+function vStats(P){const job=counter(),tagA={},tagB={};TAGS.forEach(t=>{tagA[t]=0;tagB[t]=0});const site=counter();
+  P.forEach(p=>{job.add(p.goal);p.aT.forEach(t=>tagA[t]=(tagA[t]||0)+1);p.bT.forEach(t=>tagB[t]=(tagB[t]||0)+1);p.res.forEach(r=>site.add(r.site))});
+  const tagBars=m=>bars(Object.entries(m).filter(e=>e[1]>0).map(([label,n])=>({label,n})).sort((a,b)=>b.n-a.n),P.length,'var(--b2)');
+  const grad=P.filter(p=>p.aT.includes('대학원')).length, regrow=P.filter(p=>[...p.aN,...p.bN].some(n=>n.stage==='grow')).length, withB=P.filter(p=>p.bN.length).length, dec=P.filter(p=>p.aDec).length;
+  const jobsTop=job.top(8).map(j=>{const L=P.filter(p=>norm(p.goal)===norm(j.label)),c=counter();L.forEach(p=>p.aT.forEach(t=>c.add(t)));return `<tr><td>${esc(j.label)}</td><td class="n">${j.n}</td><td>${esc(c.top(4).map(x=>x.label).join(', '))}</td><td class="w">${esc(summ(L[0].aN,''))}</td></tr>`});
+  return `<div class="card"><h2>경로 통계</h2><p class="sub">경로 A·B의 단계 이름에서 학교 유형·진학·자격·취업 등을 자동으로 분류(태그)해 셌어요. 참고용이에요.</p>
+  <div class="grid3"><div class="stat"><b>${f1(avg(P.map(p=>p.aStep)))}</b><span>경로 A 평균 단계 수</span></div><div class="stat"><b>${pct(dec,P.length)}%</b><span>갈림길(YES/NO) 사용</span></div><div class="stat"><b>${pct(grad,P.length)}%</b><span>대학원 포함 경로</span></div><div class="stat"><b>${pct(regrow,P.length)}%</b><span>취업 후 재진학·자기계발 포함</span></div></div>
+  <div class="two"><div><h3>되고 싶은 직업 (많은 순)</h3>${bars(job.top(10),P.length,'var(--b1)')}</div><div><h3>정보 조사에 쓴 곳</h3>${bars(site.top(10),0,'var(--b3)')}</div></div>
+  <div class="two"><div><h3>경로 A에 나타난 요소 (태그)</h3>${tagBars(tagA)}</div><div><h3>경로 B에 나타난 요소 (태그)</h3>${tagBars(tagB)}</div></div>
+  <h3>직업별 대표 경로 (상위 8개 직업)</h3>${table([['직업'],['학생','n'],['자주 나온 태그'],['첫 학생의 경로 A']],jobsTop)}
+  <div class="two"><div><h3>학교 안 준비에 자주 나온 말</h3>${chips(wordFreq(P.map(p=>p.R.prepIn),14))}</div><div><h3>학교 밖 준비에 자주 나온 말</h3>${chips(wordFreq(P.map(p=>p.R.prepOut),14))}</div></div>
+  <h3>예상 어려움에 자주 나온 말</h3>${chips(wordFreq(P.map(p=>p.R.hard),14))}<p class="small muted" style="margin-top:6px">경로 B 작성 ${withB}명</p></div>`}
+
+/* ===== 커리어패스 양식 ===== */
+let FSEL='path_hs';
+function vForm(P){const L=P.filter(p=>p.filled>0),job=counter(),sim=counter();L.forEach(p=>{job.add(p.cp.job);(p.cp.sims||[]).forEach(s=>sim.add(s.name))});
+  const heat=`<div class="tbl"><table><thead><tr><th>구분 \\ 단계</th>${STG.map(s=>`<th class="n">${s[1]}</th>`).join('')}</tr></thead><tbody>${ROWS.map(r=>`<tr><td><b>${r[1]}</b></td>${STG.map(s=>{const n=L.filter(p=>filled(p.cells[r[0]+'_'+s[0]])).length,v=pct(n,L.length);return `<td class="h" style="background:hsl(150 55% ${96-v*0.46}%)">${v}%<br><span class="small muted">${n}명</span></td>`}).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const opts=ROWS.flatMap(r=>STG.map(s=>`<option value="${r[0]}_${s[0]}" ${FSEL===r[0]+'_'+s[0]?'selected':''}>${r[1]} · ${s[1]}</option>`)).join('');
+  const items=L.filter(p=>filled(p.cells[FSEL])),allLines=items.flatMap(p=>lines(p.cells[FSEL]));
+  return `<div class="card"><h2>커리어패스 양식 작성 현황</h2><p class="sub">학생이 ‘구분 × 단계’ 양식(20칸)에 적은 내용이에요. 칸별 작성률과 내용을 볼 수 있어요.</p>
+  <div class="grid3"><div class="stat"><b>${L.length}</b><span>양식을 쓴 학생</span></div><div class="stat"><b>${f1(avg(L.map(p=>p.filled)))}</b><span>평균 작성 칸</span></div><div class="stat"><b>${L.filter(p=>(p.cp.sims||[]).length).length}</b><span>비슷한 직업 조사</span></div><div class="stat"><b>${L.filter(p=>filled(p.cp.cases)).length}</b><span>관련 사례 작성</span></div></div>
+  <h3>칸별 작성률 (진할수록 많이 작성)</h3>${heat}
+  <div class="two"><div><h3>조사한 직업</h3>${bars(job.top(10),0,'var(--b1)')}</div><div><h3>비슷한 직업으로 적은 직업</h3>${bars(sim.top(10),0,'var(--b3)')}</div></div></div>
+  <div class="card"><div class="row" style="justify-content:space-between"><h2>칸별 내용 모아 보기</h2><select id="fSel" class="inl" aria-label="칸 선택">${opts}</select></div>
+  <h3>자주 나온 말</h3>${chips(wordFreq(allLines,16))}<h3>학생별 내용 (${items.length}명)</h3>${table([['번호','n'],['이름'],['조사 직업'],['내용']],items.map(p=>`<tr class="click" data-open="${esc(p.uid)}"><td class="n">${who(p)}</td><td>${esc(p.name)}</td><td>${esc(p.cp.job||'')}</td><td class="w">${esc(p.cells[FSEL])}</td></tr>`))}</div>`}
+
+/* ===== 학생별 ===== */
+function vStu(P){return `<div class="card"><h2>학생별 보기와 교사 메모</h2><p class="sub">줄을 누르면 제출 내용 전체를 보고 메모·확인 표시를 남길 수 있어요. (메모는 교사만 볼 수 있어요)</p>${table([['번호','n'],['이름'],['목표 직업'],['경로 A 요약'],['교사 메모'],['확인','n']],P.map(p=>`<tr class="click" data-open="${esc(p.uid)}"><td class="n">${who(p)}</td><td>${esc(p.name)}</td><td>${esc(p.goal)}</td><td class="w">${esc(summ(p.aN,p.goal))}</td><td class="w">${esc(p.note)}</td><td class="n">${p.ok?'<span class="tag ok">확인</span>':''}</td></tr>`))}</div>`}
+function detail(uid){const p=prep(DATA.rows).find(x=>x.uid===uid);if(!p)return;const cp=p.cp,cells=p.cells;
+  const ft=`<div class="tbl"><table><thead><tr><th>구분</th>${STG.map(s=>`<th>${s[1]}</th>`).join('')}</tr></thead><tbody>${ROWS.map(r=>`<tr><td><b>${r[1]}</b></td>${STG.map(s=>`<td class="w">${esc(cells[r[0]+'_'+s[0]]||'')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const sims=(cp.sims||[]).map((s,i)=>`<div class="note"><b>직업 ${i+1} ${esc(s.name||'')}</b><br>하는 일: ${esc(s.what||'')}<br>핵심 능력: ${esc(s.core||'')}<br>관련학과/자격: ${esc(s.major||'')} · 진출분야: ${esc(s.field||'')}<br>되는 길: ${esc(s.way||'')}</div>`).join('');
+  const R=p.R,kv=[['선택 이유',R.why],['필요한 자격·역량',R.skills],['학교 안 준비',R.prepIn],['학교 밖 준비',R.prepOut],['어려움과 극복',R.hard],['한 줄 다짐',R.vow]].filter(x=>filled(x[1])).map(x=>`<tr><th>${x[0]}</th><td class="w">${esc(x[1])}</td></tr>`).join('');
+  $('#ov').innerHTML=`<div class="box" role="dialog" aria-modal="true"><div class="row" style="justify-content:space-between"><h2 style="font-family:var(--disp);font-weight:400;font-size:20px">${who(p)} ${esc(p.name)} <span class="small muted">${esc(p.d.me&&p.d.me.school||'')} · ${fmtAt(p.at)} 제출 · ${esc(p.id)}</span></h2><button class="btn ghost sm" data-act="close">닫기</button></div>
+  <h3>(${esc(p.goal)})이 되기 위한 나의 진로 경로</h3><b>경로 A</b>${flowHTML(p.aN,p.goal)}${p.bN.length?`<b>경로 B</b>${flowHTML(p.bN,p.goal)}`:''}
+  ${kv?`<div class="tbl"><table><tbody>${kv}</tbody></table></div>`:''}
+  ${p.res.length?`<h3>정보 조사 기록</h3><ul style="margin:0;padding-left:18px">${p.res.map(r=>`<li><b>${esc(r.site)}</b> ${esc(r.found)}</li>`).join('')}</ul>`:''}
+  <h3>커리어패스 양식 — ${esc(cp.job||'')} (${p.filled}/20칸)</h3>${ft}${filled(cp.cases)?`<p class="small" style="white-space:pre-wrap"><b>관련 사례</b>\n${esc(cp.cases)}</p>`:''}${sims?`<div class="two">${sims}</div>`:''}
+  <h3>교사 메모</h3><textarea id="nText" placeholder="교사만 보는 메모">${esc(p.note)}</textarea><div class="row"><label class="row"><input type="checkbox" id="nOk" ${p.ok?'checked':''}> 확인 표시</label><button class="btn" data-act="nsave" data-uid="${esc(uid)}">메모 저장</button></div></div>`;$('#ov').hidden=false}
+
+/* ===== AI 분석 · 내보내기 ===== */
+const AI_KINDS={trend:'학급 전체 경향 분석 보고서',feedback:'학생별 피드백 초안',stats:'통계 해석·표/그래프 제안',next:'후속 수업 활동 제안'};
+const cut=(s,n)=>String(s||'').replace(/\s+/g,' ').slice(0,n);
+function buildPrompt(P,kind,anon){const job=counter(),tag={},site=counter();P.forEach(p=>{job.add(p.goal);p.aT.forEach(t=>tag[t]=(tag[t]||0)+1);p.res.forEach(r=>site.add(r.site))});
+  const digest={학생수:P.length,직업상위:job.top(10),경로A태그:tag,경로A평균단계:+f1(avg(P.map(p=>p.aStep))),갈림길사용률:pct(P.filter(p=>p.aDec).length,P.length),경로B작성률:pct(P.filter(p=>p.bN.length).length,P.length),조사사이트:site.top(8),양식평균작성칸:+f1(avg(P.map(p=>p.filled)))};
+  const stu=P.map(p=>({학생:anon?who(p):`${who(p)} ${p.name}`,목표직업:p.goal,경로A:cut(summ(p.aN,''),200),경로B:cut(summ(p.bN,''),150),선택이유:cut(p.R.why,100),준비:cut((p.R.prepIn||'')+' / '+(p.R.prepOut||''),120),어려움:cut(p.R.hard,100),양식직업:p.cp.job||'',양식칸:p.filled}));
+  const ask={trend:'① 학급 전체의 진로 목표·경로 경향 ② 경로 설계에서 잘한 점 ③ 부족하거나 오해한 점(예: 자격·시험 누락, 갈림길·플랜 B 부재) ④ 지도 포인트 3가지 ⑤ 우수 사례(익명)를 정리해 주세요.',
+    feedback:'각 학생에게 줄 피드백 초안을 학생마다 3문장 이내로 작성해 주세요. (칭찬 1, 보완 질문 1, 다음 행동 1) 학생 표기는 입력된 그대로 쓰세요.',
+    stats:'제공된 요약 통계와 학생 자료를 해석해 주세요. 핵심 발견 5가지, 표로 만들 만한 집계(예: 직업×경로 유형), 추천 그래프, 추가로 분석하면 좋을 질문을 제안해 주세요.',
+    next:'이 학급의 경로 설계 결과를 바탕으로 다음 수업(진로 활동)에서 할 수 있는 후속 활동 4가지를 목표·방법·준비물·소요 시간과 함께 제안해 주세요.'}[kind];
+  return `당신은 중학교 진로교육 전문가입니다. 아래는 중학생들이 ‘나의 진로경로 설계소’에서 작성한 진로경로 자료입니다. 개인정보는 최소화되어 있습니다.\n\n[요청]\n${ask}\n\n[요약 통계(JSON)]\n${JSON.stringify(digest)}\n\n[학생별 자료(JSON)]\n${JSON.stringify(stu)}\n\n[작성 원칙] 한국어, 교사가 바로 활용할 수 있게 항목별로 간결하게. 자료에 없는 내용을 지어내지 말고, 근거가 약하면 그렇다고 표시해 주세요.`}
+function vAi(P){return `<div class="card"><h2>AI로 분석하기</h2><p class="sub">제출 자료를 AI가 읽기 좋은 글로 묶어 줘요. 복사해서 Claude 등 AI 도구에 붙여 넣거나, AI 키가 등록돼 있으면 여기서 바로 분석할 수 있어요.</p>
+  <div class="row"><select id="aiKind" class="inl">${Object.entries(AI_KINDS).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select><label class="row small"><input type="checkbox" id="aiAnon" checked> 이름 빼고(학번만) 보내기</label><button class="btn ghost sm" data-act="aibuild">요청글 만들기</button></div>
+  <textarea id="aiPrompt" style="min-height:200px;margin-top:8px" placeholder="‘요청글 만들기’를 누르면 현재 학급 필터 기준으로 만들어져요."></textarea>
+  <div class="row" style="margin-top:8px"><span class="small muted" id="aiLen"></span><button class="btn sm" data-act="aicopy">복사</button><button class="btn sm" data-act="airun">여기서 AI로 분석</button></div><pre class="out" id="aiOut" hidden></pre></div>
+  <div class="card"><h2>데이터 내보내기 (분석·가공용)</h2><p class="sub">엑셀·구글 시트·통계 도구에서 바로 쓸 수 있는 표예요. (현재 학급 필터 적용, 한글 깨짐 방지 UTF-8)</p>
+  <div class="row"><button class="btn ghost" data-act="csv-wide">① 제출 요약표 CSV (1인 1행)</button><button class="btn ghost" data-act="csv-steps">② 경로 단계표 CSV (단계 1개 1행)</button><button class="btn ghost" data-act="csv-cells">③ 양식 칸 CSV (칸 1개 1행)</button><button class="btn ghost" data-act="json">④ 전체 JSON</button></div>
+  <p class="small muted" style="margin-top:8px">원본은 구글 시트의 ‘경로_제출·경로_단계·경로_양식셀’ 탭에도 똑같이 쌓여 있어요. 시트에서 피벗 테이블이나 Gemini·Claude 연동 도구로 분석해도 돼요.</p></div>`}
+
+/* ===== CSV ===== */
+function dl(name,rows,type){const body=type==='json'?rows:'﻿'+rows.map(r=>r.map(c=>`"${String(c==null?'':c).replace(/"/g,'""')}"`).join(',')).join('\r\n');const u=URL.createObjectURL(new Blob([body],{type:type==='json'?'application/json':'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000)}
+function csvWide(){const P=cur(),H=['접수번호','제출시각','학년','반','번호','이름','목표직업','경로A요약','경로A단계수','경로A갈림길수','경로A태그','경로B요약','경로B태그','선택이유','필요역량','교내준비','교외준비','어려움과극복','한줄다짐','조사사이트','조사내용','양식직업','양식작성칸수'];
+  ROWS.forEach(r=>STG.forEach(s=>H.push(r[1]+'_'+s[1])));H.push('양식관련사례','교사메모');
+  dl('진로경로_제출요약.csv',[H,...P.map(p=>{const R=p.R,row=[p.id,fmtAt(p.at),p.g,p.c,p.no,p.name,p.goal,summ(p.aN,p.goal),p.aStep,p.aDec,p.aT.join(', '),summ(p.bN,p.goal),p.bT.join(', '),R.why,R.skills,R.prepIn,R.prepOut,R.hard,R.vow,p.res.map(x=>x.site).join(' | '),p.res.map(x=>x.found).join(' | '),p.cp.job,p.filled];ROWS.forEach(r=>STG.forEach(s=>row.push(p.cells[r[0]+'_'+s[0]]||'')));row.push(p.cp.cases,p.note);return row})])}
+function csvSteps(){const P=cur(),out=[['접수번호','학년','반','번호','이름','목표직업','경로','순서','유형','단계구분','단계명','갈림길질문','NO이동','메모']];P.forEach(p=>[['경로A',p.aN],['경로B',p.bN]].forEach(([k,ns])=>ns.forEach((n,i)=>out.push([p.id,p.g,p.c,p.no,p.name,p.goal,k,i+1,n.t==='dec'?'갈림길':'단계',n.t==='dec'?'':(STAGE_KO[n.stage]||'기타'),n.t==='dec'?'':n.title,n.t==='dec'?n.q:'',n.t==='dec'?n.no:'',n.memo||''])))) ;dl('진로경로_단계표.csv',out)}
+function csvCells(){const P=cur(),out=[['접수번호','학년','반','번호','이름','양식직업','단계','행','내용']];P.forEach(p=>ROWS.forEach(r=>STG.forEach(s=>{const v=p.cells[r[0]+'_'+s[0]];if(filled(v))out.push([p.id,p.g,p.c,p.no,p.name,p.cp.job,s[1],r[1],v])})));dl('진로경로_양식칸.csv',out)}
+
+/* ===== 그리기·이벤트 ===== */
+function render(){const P=cur();$('#view').innerHTML={status:vStatus,stats:vStats,form:vForm,stu:vStu,ai:vAi}[TAB](P);$('#tabs').innerHTML=TABS.map(([k,l])=>`<button class="tab" role="tab" aria-selected="${k===TAB}" data-tab="${k}">${l}</button>`).join('');
+  const cl=[...new Set(DATA.rows.map(clsKey))].sort((a,b)=>{const[x,y]=a.split('-').map(Number),[u,w]=b.split('-').map(Number);return x-u||y-w});const sel=$('#fClass');sel.innerHTML='<option value="all">전체 학급</option>'+cl.map(c=>`<option value="${c}">${c.replace('-','학년 ')}반</option>`).join('');sel.value=CLS}
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('[data-tab]');if(t){TAB=t.dataset.tab;render();return}
+  const o=e.target.closest('[data-open]');if(o){detail(o.dataset.open);return}
+  const a=e.target.closest('[data-act]');if(!a)return;const act=a.dataset.act;
+  if(act==='close')$('#ov').hidden=true;if(act==='refresh')load(true);
+  if(act==='logout'){try{sessionStorage.removeItem('pathT')}catch(_){}AUTH={};DATA={rows:[]};$('#app').hidden=true;showLogin('')}
+  if(act==='csv-wide')csvWide();if(act==='csv-steps')csvSteps();if(act==='csv-cells')csvCells();
+  if(act==='json')dl('진로경로_전체.json',JSON.stringify(cur().map(p=>({접수번호:p.id,학년:p.g,반:p.c,번호:p.no,이름:p.name,제출시각:p.at,data:p.d})),null,1),'json');
+  if(act==='nsave'){const uid=a.dataset.uid,note=$('#nText').value,ok=$('#nOk').checked;try{await A('pathNote',{uid,note,ok});const r=DATA.rows.find(x=>x.uid===uid);if(r){r.note=note;r.ok=ok}toast('저장했어요.');render()}catch(er){toast(er.message||'저장하지 못했어요.')}}
+  if(act==='aibuild'){const p=buildPrompt(cur(),$('#aiKind').value,$('#aiAnon').checked);$('#aiPrompt').value=p;$('#aiLen').textContent=`${p.length.toLocaleString()}자`+(p.length>40000?' · 길어요. 학급을 골라 나눠 보내세요.':'')}
+  if(act==='aicopy'){const v=$('#aiPrompt').value;if(!v){toast('먼저 요청글을 만들어 주세요.');return}try{await navigator.clipboard.writeText(v);toast('복사했어요. AI 도구에 붙여 넣으세요.')}catch(_){$('#aiPrompt').select();document.execCommand('copy');toast('복사했어요.')}}
+  if(act==='airun'){const v=$('#aiPrompt').value;if(!v){toast('먼저 요청글을 만들어 주세요.');return}a.disabled=true;a.textContent='분석 중…';try{const r=await A('pathAi',{turns:[{role:'user',content:v}],maxTokens:4000});const out=$('#aiOut');out.hidden=false;out.textContent=r.text+(r.truncated?'\n\n(길어서 중간에 끊겼어요.)':'')}catch(er){toast(er.code==='ai_off'?er.message+' (메뉴 ② AI 키 입력)':(er.message||'분석하지 못했어요.'))}finally{a.disabled=false;a.textContent='여기서 AI로 분석'}}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#ov').hidden=true});$('#ov').addEventListener('click',e=>{if(e.target.id==='ov')$('#ov').hidden=true});
+$('#fClass').addEventListener('change',e=>{CLS=e.target.value;render()});
+document.addEventListener('change',e=>{if(e.target.id==='fSel'){FSEL=e.target.value;render()}});
+
+async function load(show){const b=$('#rbtn');if(b){b.disabled=true;b.textContent='불러오는 중…'}try{const l=await A('pathList');DATA={rows:l.rows||[]};render();if(show)toast('새로 불러왔어요.')}catch(e){toast(e.message||'불러오지 못했어요.')}finally{if(b){b.disabled=false;b.textContent='새로고침'}}}
+function showLogin(m){$('#login').hidden=false;$('#lerr').textContent=m||'';$('#tcode').value=''}
+async function enter(){$('#login').hidden=true;$('#app').hidden=false;$('#padA').href=PADLET_URL;$('#demoBar').hidden=!DEMO;await load(false)}
+$('#lform').addEventListener('submit',async e=>{e.preventDefault();const code=$('#tcode').value.trim();if(!code)return;const btn=$('#lbtn');btn.disabled=true;$('#lerr').textContent='';AUTH={tcode:code};
+  try{const me=await A('pathMe');if(me.role!=='teacher')throw new Error('교사 코드가 맞지 않아요.');try{sessionStorage.setItem('pathT',code)}catch(_){}await enter()}catch(er){AUTH={};$('#lerr').textContent=er.code==='bad_login'||er.code==='locked'?er.message:(er.message||'로그인하지 못했어요.')}finally{btn.disabled=false}});
+(async function(){let saved='';try{saved=sessionStorage.getItem('pathT')||''}catch(_){}
+  if(DEMO){AUTH={tcode:'demo'};await enter();return}
+  if(saved){AUTH={tcode:saved};try{const me=await A('pathMe');if(me.role==='teacher'){await enter();return}}catch(_){}AUTH={}}showLogin('')})();
+
+/* ===== 예시 데이터 (#demo) ===== */
+function demoApi(a,p){if(!window.__d)window.__d=genDemo();const D=window.__d;
+  if(a==='pathMe')return{role:'teacher'};if(a==='pathList')return{rows:D};
+  if(a==='pathNote'){const r=D.find(x=>x.uid===p.uid);if(r){r.note=p.note;r.ok=p.ok}return{ok:true}}
+  if(a==='pathAi')return{text:'(예시 화면) 실제 서버에서는 AI 분석 결과가 여기에 나와요.'};return{}}
+function genDemo(){let s=11;const rnd=()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};const pick=a=>a[Math.floor(rnd()*a.length)];
+  const names=['가온','나린','다솜','라온','마루','보라','사랑','아름','이든','지안','하준','서윤','도현','예준','유나','시우','채원','민재','수아','주원','태윤','하린','은우','재이'];
+  const jobs=['수의사','웹툰 작가','간호사','프로그래머','교사','요리사','게임 개발자','디자이너','의사','경찰관'];
+  const P1=[['hs','일반고 진학'],['univ','4년제 대학교 진학'],['work','취업']],P2=[['hs','특성화고 진학'],['work','취업'],['grow','야간대학교 진학']],P3=[['hs','일반고 진학'],['univ','4년제 대학교 진학'],['univ','대학원 진학'],['cert','국가자격시험 합격'],['work','취업']];
+  const rows=[];let k=0;[[1,1,12],[1,2,11]].forEach(([g,c,n])=>{for(let no=1;no<=n;no++){if(rnd()<.15)continue;const goal=pick(jobs),pa=pick([P1,P2,P3]),nodes=pa.map(([st,t])=>({t:'step',stage:st,title:t,memo:''}));if(rnd()<.5)nodes.splice(1,0,{t:'dec',q:'진학 여부',no:'바로 취업'});
+    const B=rnd()<.6?[{t:'step',stage:'work',title:'취업',memo:''},{t:'step',stage:'grow',title:'방송통신대 진학',memo:''}]:[];const cells={};const f=Math.floor(rnd()*14)+4;ROWS.forEach(r=>STG.forEach(st=>{if(rnd()<f/20)cells[r[0]+'_'+st[0]]=r[0]==='path'?pick(['일반중학교','일반고\n특성화고','4년제 대학교','국가시험 합격','병원 취업']):pick(['성적 관리','독서','자격증','체험 활동','봉사'])}));
+    const d={v:2,me:{school:'수명중학교',g,c,no,name:names[k++%names.length]},goal,pathA:{nodes,tags:[],summary:''},pathB:{nodes:B,tags:[],summary:''},research:rnd()<.8?[{site:pick(['커리어넷','워크넷','큐넷(한국산업인력공단)','대학어디가']),found:'필요한 자격과 학과 확인'}]:[],reflect:{why:'어릴 때부터 관심이 있어서',skills:'꾸준한 노력과 자격증',prepIn:pick(['관련 동아리 활동','독서와 성적 관리','진로 수업 참여']),prepOut:pick(['직업 체험 신청','관련 책 읽기','학원 수강']),hard:pick(['성적이 부족할 수 있어서 매일 공부한다','비용이 걱정이라 장학금을 알아본다']),vow:'포기하지 않겠다'},read:{},careerpath:{job:goal,cells,cases:'커리어넷 인터뷰 동영상',sims:[{name:pick(jobs),way:'관련 학과 졸업 후 자격 취득'}],filled:Object.keys(cells).length}};
+    const TG=[['일반고',/일반고/],['특성화고',/특성화/],['4년제 대학교',/대학교/],['대학원',/대학원/],['자격·면허시험',/자격|국가/],['취업',/취업/],['방송·사이버대',/방송/]];const tg=ns=>{const t=ns.map(n=>n.title||'').join(' ');return TG.filter(x=>x[1].test(t)).map(x=>x[0])};d.pathA.tags=tg(nodes);d.pathB.tags=tg(B);
+    rows.push({id:'DEMO'+g+c+no,at:Date.now()-Math.floor(rnd()*7200e3),uid:`${g}-${c}-${no}`,school:'수명중학교',g,c,no,name:d.me.name,data:d,note:'',ok:false})}});return rows}
+</script>
+</body>
+</html>
