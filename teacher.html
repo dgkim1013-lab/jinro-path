@@ -196,7 +196,7 @@ function csvWide(){const P=cur(),H=['접수번호','제출시각','학년','반'
 function csvSteps(){const P=cur(),out=[['접수번호','학년','반','번호','이름','목표직업','경로','순서','유형','단계구분','단계명','갈림길질문','NO이동','메모']];P.forEach(p=>[['경로A',p.aN],['경로B',p.bN]].forEach(([k,ns])=>ns.forEach((n,i)=>out.push([p.id,p.g,p.c,p.no,p.name,p.goal,k,i+1,n.t==='dec'?'갈림길':'단계',n.t==='dec'?'':(STAGE_KO[n.stage]||'기타'),n.t==='dec'?'':n.title,n.t==='dec'?n.q:'',n.t==='dec'?n.no:'',n.memo||''])))) ;dl('진로경로_단계표.csv',out)}
 function csvCells(){const P=cur(),out=[['접수번호','학년','반','번호','이름','양식직업','단계','행','내용']];P.forEach(p=>ROWS.forEach(r=>STG.forEach(s=>{const v=p.cells[r[0]+'_'+s[0]];if(filled(v))out.push([p.id,p.g,p.c,p.no,p.name,p.cp.job,s[1],r[1],v])})));dl('진로경로_양식칸.csv',out)}
 
-/* ===== AI 자동완성: 직업명 → ③ 설계 실습 + ④ 나의 진로경로 ===== */
+/* ===== AI 자동완성: 직업명 → ③ 진로경로 설계 + ④ 진로경로 유형 ===== */
 let GEN=null;
 const GKEYS=ROWS.flatMap(r=>STG.map(x=>r[0]+'_'+x[0])),SIMF=['name','what','core','major','field','way'],REFK=['why','skills','prepIn','prepOut','hard','vow','parent'];
 function parseJSON(t){t=String(t||'').replace(/```(?:json)?/gi,'');const a=t.indexOf('{'),b=t.lastIndexOf('}');if(a<0||b<a)throw new Error('JSON을 찾지 못했어요. 답변 전체를 붙여 넣었는지 확인해 주세요.');try{return JSON.parse(t.slice(a,b+1))}catch(e){throw new Error('JSON 형식이 맞지 않아요. ('+e.message+')')}}
@@ -242,11 +242,11 @@ const nodeLines=(ns,goal)=>{let i=0;const o=['출발'];ns.forEach(n=>{if(n.t==='
 function docModel(g){const B=[],d=new Date(),ds=`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}.`;
   B.push({top:{t:`(${g.goal}) 진로경로`,label:'상담 년월일',blank:'　　　　년　　　월　　　일'}});
   B.push({p:`자동완성 수준: ${LVN[g.lv||1]}  ·  저장일 ${ds}  ·  AI가 만든 초안입니다. 제도·자격·시험은 바뀔 수 있으니 공식 사이트(커리어넷·워크넷·큐넷 등)에서 확인하세요.`,small:1});
-  B.push({h:2,t:'③ 설계 실습 — 커리어패스 양식'});
+  B.push({h:2,t:'③ 진로경로 설계'});
   B.push({table:{head:['구분',...STG.map(x=>x[1])],rows:ROWS.map(r=>[r[1],...STG.map(x=>g.cp.cells[r[0]+'_'+x[0]]||'')]),w:[9,...STG.map(()=>18)]}});
   if(filled(g.cp.cases)){B.push({h:3,t:'관련 사례'});B.push({p:g.cp.cases})}
   if(g.cp.sims.length){B.push({h:3,t:'비슷한 직업 3가지'});B.push({table:{head:['직업','하는 일','핵심 능력','관련학과/자격','진출분야','되는 길'],rows:g.cp.sims.map(x=>[x.name,x.what,x.core,x.major,x.field,x.way]),w:[14,20,16,18,16,16]}})}
-  B.push({h:2,t:'④ 나의 진로경로'});B.push({h:3,t:'경로 A (가장 가고 싶은 길)'});B.push({p:nodeLines(g.A.nodes,g.goal).join('\n')});
+  B.push({h:2,t:'④ 진로경로 유형'});B.push({h:3,t:'경로 A (가장 가고 싶은 길)'});B.push({p:nodeLines(g.A.nodes,g.goal).join('\n')});
   if(g.B.nodes.length){B.push({h:3,t:'경로 B (다른 길 · 플랜 B)'});B.push({p:nodeLines(g.B.nodes,g.goal).join('\n')})}
   const kv=[['선택 이유',g.ref.why],['필요한 자격·역량',g.ref.skills],['학교 안 준비',g.ref.prepIn],['학교 밖 준비',g.ref.prepOut],['어려움과 극복',g.ref.hard],['한 줄 다짐',g.ref.vow],['부모님(보호자) 의견',g.ref.parent]].filter(x=>filled(x[1]));
   if(kv.length){B.push({h:3,t:'나의 점검 글'});B.push({table:{head:['항목','내용'],rows:kv,w:[22,78]}})}
@@ -320,8 +320,8 @@ async function libSave(){if(!GEN){toast('먼저 자동완성 결과를 만들어
   if(same&&confirm('같은 폴더에 같은 제목이 있어요. 덮어쓸까요? (취소하면 새 자료로 따로 저장해요)'))id=same.id;
   try{await A('pathLibSave',{id,folder,title,job:GEN.goal,lv:GEN.lv||1,json});toast(`보관함 ‘${folder}’에 저장했어요.`);await libLoad()}catch(er){toast(er.code==='bad_action'?'서버(Path_api.gs)를 새 버전으로 배포한 뒤 쓸 수 있어요.':(er.message||'저장하지 못했어요.'))}}
 
-function vGen(){return `<div class="card"><h2>AI로 ③ 설계 실습 · ④ 나의 진로경로 자동 완성</h2>
-  <p class="sub">직업명이나 진로 목표를 넣으면 AI가 ③ 커리어패스 양식(20칸·관련 사례·비슷한 직업 3개)과 ④ 경로 A·B, 점검 글을 채워 줘요. 수업 시범 자료로 쓰거나, 내려받은 파일을 학생 앱 ‘불러오기’에 넣으면 학생 화면에도 채워져요. <b>AI 결과는 제도·자격이 최신이 아닐 수 있으니 공식 사이트로 꼭 확인</b>하세요.</p>
+function vGen(){return `<div class="card"><h2>AI로 ③ 진로경로 설계 · ④ 진로경로 유형 자동 완성</h2>
+  <p class="sub">직업명이나 진로 목표를 넣으면 AI가 ③ 진로경로 설계 양식(20칸·관련 사례·비슷한 직업 3개)과 ④ 진로경로 유형(경로 A·B), 점검 글을 채워 줘요. 수업 시범 자료로 쓰거나, 내려받은 파일을 학생 앱 ‘불러오기’에 넣으면 학생 화면에도 채워져요. <b>AI 결과는 제도·자격이 최신이 아닐 수 있으니 공식 사이트로 꼭 확인</b>하세요.</p>
   <div class="row"><input type="text" id="gJob" class="inl" style="flex:1 1 220px;min-width:180px" maxlength="30" placeholder="직업명 또는 진로 목표 (예: 수의사, 웹툰 작가, 소방관)" value="${esc(GEN?GEN.goal:'')}">
   <select id="gLv" class="inl" title="자동완성 수준"><option value="1">1단계 · 중학생이 이해하기 쉬운 말로</option><option value="2">2단계 · 조금 더 구체적·전문적으로</option><option value="3">3단계 · 직업 컨설팅 수준(고급 정보 포함)</option></select>
   <label class="row small"><input type="checkbox" id="gB" checked> 경로 B(플랜 B) 포함</label></div>
@@ -337,8 +337,8 @@ function genShow(){const o=$('#gOut');if(!o)return;if(!GEN){o.innerHTML='';retur
   o.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h2>미리보기 · (${esc(g.goal)}) 진로경로</h2><span class="row"><button class="btn sm" data-act="gendl">학생 앱용 파일(.json)</button><button class="btn sm" data-act="genpdf">PDF 저장</button><button class="btn sm" data-act="gendocx">워드 저장(.docx)</button><button class="btn ghost sm" data-act="gencopy">JSON 복사</button></span></div>
   <p class="small muted">자동완성 수준: <b>${esc(LVN[g.lv||1])}</b> · PDF는 인쇄 창에서 ‘PDF로 저장’을 고르세요. 한글(HWP)은 워드 파일을 한글에서 열어 ‘다른 이름으로 저장’하면 돼요.</p>
   <p class="sub">학생 앱 ⑤ 제출하기 또는 ③·④ 아래 ‘📂 불러오기’에 이 파일을 넣으면 학생이 자기 앱에서 시범 자료를 열어 볼 수 있어요. (학생 정보는 바뀌지 않아요)</p>
-  <h3>③ 설계 실습 — 커리어패스 양식</h3>${ft}${filled(g.cp.cases)?`<p class="small" style="white-space:pre-wrap"><b>관련 사례</b>\n${esc(g.cp.cases)}</p>`:''}${sims?`<div class="two">${sims}</div>`:''}
-  <h3>④ 나의 진로경로</h3><b>경로 A</b>${flowHTML(g.A.nodes,g.goal)}${g.B.nodes.length?`<b>경로 B</b>${flowHTML(g.B.nodes,g.goal)}`:''}${kv?`<div class="tbl" style="margin-top:8px"><table><tbody>${kv}</tbody></table></div>`:''}${pro?`<h3>직업 컨설팅 정보</h3><div class="tbl"><table><tbody>${pro}</tbody></table></div>`:''}
+  <h3>③ 진로경로 설계</h3>${ft}${filled(g.cp.cases)?`<p class="small" style="white-space:pre-wrap"><b>관련 사례</b>\n${esc(g.cp.cases)}</p>`:''}${sims?`<div class="two">${sims}</div>`:''}
+  <h3>④ 진로경로 유형</h3><b>경로 A</b>${flowHTML(g.A.nodes,g.goal)}${g.B.nodes.length?`<b>경로 B</b>${flowHTML(g.B.nodes,g.goal)}`:''}${kv?`<div class="tbl" style="margin-top:8px"><table><tbody>${kv}</tbody></table></div>`:''}${pro?`<h3>직업 컨설팅 정보</h3><div class="tbl"><table><tbody>${pro}</tbody></table></div>`:''}
   <div class="note" style="margin-top:10px"><b>보관함에 저장</b> <span class="muted small">(폴더는 / 로 이어 쓰면 하위 폴더가 돼요. 예: 교육/교사)</span><div class="row" style="margin-top:6px"><input type="text" id="gFolder" class="inl" list="gFolders" maxlength="60" placeholder="폴더 (예: 교육/교사)" value="${esc(LIBF||'')}"><datalist id="gFolders">${[...new Set(LIB.map(x=>x.folder))].map(f=>`<option value="${esc(f)}">`).join('')}</datalist><input type="text" id="gTitle" class="inl" style="flex:1 1 200px" maxlength="60" placeholder="제목 (비우면 직업명+단계)"><button class="btn" data-act="libsave">보관함에 저장</button></div></div></div>`}
 function genSet(o){GEN=normGen(o);const t=$('#gPaste');if(t)t.value=JSON.stringify(GEN,null,1);genShow()}
 
