@@ -116,27 +116,47 @@ table.cpt{min-width:960px} table.cpt textarea{min-height:92px;font-size:14px;pad
 .pc .no{flex:0 0 auto;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:13px}
 .pc.good{border-color:#2f9d6a;background:#e9f8ef} .pc.bad{border-color:#d9825f;background:#fff1ea}
 /* 빌더 */
-.bld .pal{border:1px solid var(--line);border-radius:14px;padding:8px 10px;background:#fbfdfc}
-.bld .pal summary{cursor:pointer;font-weight:700}
-.pgrp{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
-.pgrp>b{font-size:13px;min-width:92px;color:var(--muted)}
-.pchip{border:1.5px solid rgba(0,0,0,.14);border-radius:999px;padding:4px 12px;cursor:pointer;font-size:14px;min-height:36px;background:var(--s-etc)}
-.pchip.hs{background:var(--s-hs)} .pchip.univ{background:var(--s-univ)} .pchip.cert{background:var(--s-cert)} .pchip.work{background:var(--s-work)} .pchip.grow{background:var(--s-grow)}
+.pathsec{border:1.5px solid var(--line);border-radius:14px;margin:10px 0;background:#fff}
+.pathsec>summary{cursor:pointer;font-weight:700;padding:8px 12px;font-size:16px}
+.pathsec>.bld{padding:0 10px 10px}
+.wbox{border:1.5px solid var(--accent);border-radius:12px;padding:6px 10px 8px;background:#fbfdfc}
+.wh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:2px 0 4px}
+.wh>b{font-size:14px}
+.wh .tip{font-size:12px;margin:0}
+.tplsel{margin-left:auto;font-size:12px;padding:1px 6px;min-height:26px;width:auto;max-width:200px;border-radius:8px}
+.pgrp{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:3px 0}
+.pgrp>b{font-size:12px;min-width:74px;color:var(--muted)}
+.pchip{border:1px solid rgba(0,0,0,.18);border-radius:999px;padding:0 6px;cursor:pointer;font-size:11px;line-height:1.2;min-height:20px;background:var(--s-etc);user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.pchip.hs{background:var(--s-hs)} .pchip.univ{background:var(--s-univ)} .pchip.cert{background:var(--s-cert)} .pchip.work{background:var(--s-work)} .pchip.grow{background:var(--s-grow)} .pchip.dec{background:#cfe6ff}
 .pchip:hover{filter:brightness(.95);border-color:#000}
-.pchip.rec{outline:2px solid var(--lime);outline-offset:1px}
-.nodes{display:flex;flex-direction:column;gap:8px;margin:10px 0}
-.nd{border:1.5px solid rgba(0,0,0,.14);border-left-width:8px;border-radius:12px;padding:8px 10px;background:#fff}
+.mypath{border:1.5px dashed #6fa896;border-radius:10px;padding:4px 8px 6px;margin:8px 0;background:#f4fbf8}
+.mypath.dover,.nodes.dover{outline:2px solid var(--accent);background:#e8f7ef}
+.mypath .flow{gap:4px 2px;margin:2px 0}
+.bld .fn{padding:3px 8px;min-width:56px;font-size:12.5px;border-radius:10px}
+.bld .fn small{font-size:11px}
+.fn.dg{cursor:grab;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.fn.dbef{box-shadow:-5px 0 0 0 var(--accent)} .fn.daft{box-shadow:5px 0 0 0 var(--accent)}
+.nd.dbef{box-shadow:0 -4px 0 0 var(--accent)} .nd.daft{box-shadow:0 4px 0 0 var(--accent)}
+.listbox{margin-top:6px;border-top:1px solid var(--line);padding-top:4px}
+.listbox>summary{cursor:pointer;font-weight:700;font-size:14px}
+.nodes{display:flex;flex-direction:column;gap:4px;margin:6px 0;border-radius:8px}
+.nd{display:flex;align-items:center;gap:5px;flex-wrap:wrap;border:1px solid rgba(0,0,0,.14);border-left-width:6px;border-radius:9px;padding:3px 6px;background:#fff}
 .nd.hs{border-left-color:#e8a73a} .nd.univ{border-left-color:#4aa7d8} .nd.cert{border-left-color:#8d70d4} .nd.work{border-left-color:#43b161} .nd.grow{border-left-color:#e57a98} .nd.etc{border-left-color:#9aa9a2} .nd.dec{border-left-color:#4b8fd1;background:#f3f9ff}
-.nd .h{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.nd .h .num{width:26px;height:26px;border-radius:50%;background:#1b2a25;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:0 0 auto}
-.nd .h input[type=text]{flex:1 1 180px}
-.nd .h select{flex:0 0 auto}
-.nd .mv{display:flex;gap:4px;margin-left:auto}
-.nd .memo{margin-top:6px}
-.nd .memo input{font-size:14px;padding:6px 10px}
-.pv{background:#f7faf8;border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:8px}
-.pv>b{font-size:13.5px;color:var(--muted)}
-.tplrow{display:flex;gap:6px;flex-wrap:wrap}
+.nd .num{width:20px;height:20px;border-radius:50%;background:#1b2a25;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.nd .dm{font-size:12px;color:#2a6fb0}
+.nd select{font-size:12.5px;padding:2px 4px;min-height:28px;width:auto;flex:0 0 auto}
+.nd input[type=text]{font-size:13px;padding:3px 8px;min-height:30px}
+.nd .g1{flex:2 1 150px} .nd .g2{flex:2 1 140px}
+.dh{margin-left:auto;border:0;background:transparent;font-size:20px;line-height:1;cursor:grab;padding:2px 6px;touch-action:none;color:#6b7d75;min-height:30px;border-radius:8px;user-select:none;-webkit-user-select:none}
+.dh:hover,.dh:focus-visible{background:#e8efeb;color:#000}
+.xb{border:0;background:transparent;color:var(--warn);cursor:pointer;min-height:28px;padding:0 6px;border-radius:8px;font-size:13px}
+.xb:hover{background:#fdece6}
+.brow{display:flex;gap:4px;flex-wrap:wrap}
+.brow .btn.sm{min-height:28px;padding:2px 9px;font-size:12.5px}
+.dndg{position:fixed;z-index:9999;pointer-events:none;background:#fff;border:2px solid var(--accent);border-radius:10px;padding:3px 10px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:.95;max-width:220px}
+.savebar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.savebar .btn{min-height:36px;padding:4px 12px;font-size:14px}
+.pv-hint{font-size:12px;color:var(--muted)}
 .chk{list-style:none;margin:6px 0;padding:0}
 .chk li{padding:4px 0 4px 28px;position:relative}
 .chk li::before{content:'○';position:absolute;left:4px;color:#9aa9a2}
@@ -304,6 +324,7 @@ table.cpt{min-width:960px} table.cpt textarea{min-height:92px;font-size:14px;pad
     <h3>비슷한 직업 (2~3개)</h3>
     <div class="grid3" id="cpSims"></div>
   </div>
+    <div class="card"><h2 style="font-size:18px">💾 내 기기(태블릿·스마트폰)에 저장</h2><p class="tip" style="margin:0 0 6px">선생님께 제출하기 전에 내 기기에도 꼭 저장해 두세요. 인터넷이 안 될 때도 내용을 잃지 않아요.</p><div class="savebar" data-savebar></div></div>
   <div class="sticky-next"><button class="btn ghost" data-go="read">← 이전</button><button class="btn" data-go="plan">다음: 나의 진로경로 계획 →</button></div>
 </section>
 
@@ -323,13 +344,10 @@ table.cpt{min-width:960px} table.cpt textarea{min-height:92px;font-size:14px;pad
     <h2>(<span id="goalShow" style="color:var(--accent-d)">          </span>)이 되기 위한 나의 진로 경로</h2>
     <label class="f" for="goal">내가 되고 싶은 직업 (진로 목표)</label>
     <input type="text" id="goal" data-bind="goal" data-after="refreshAll" maxlength="30" placeholder="예) 극작가, 수의사, 간호사">
-    <h3>경로 A · 가장 가고 싶은 길</h3>
-    <div class="tplrow" id="tplA"></div>
-    <div id="bld-A" class="bld"></div>
-    <h3 style="margin-top:22px">경로 B · 다른 길 (플랜 B)</h3>
-    <p class="tip">경로 A가 어려워졌을 때 선택할 수 있는 길, 또는 일하면서 성장하는 길을 그려 봐요.</p>
-    <div class="tplrow" id="tplB"></div>
-    <div id="bld-B" class="bld"></div>
+    <details class="pathsec" id="ps-A" open><summary>경로 A · 가장 가고 싶은 길 <small class="muted" id="cnt-A"></small></summary><div id="bld-A" class="bld"></div></details>
+    <details class="pathsec" id="ps-B" open><summary>경로 B · 다른 길 (플랜 B) <small class="muted" id="cnt-B"></small></summary>
+      <p class="tip" style="margin:0 12px 4px">경로 A가 어려워졌을 때 선택할 수 있는 길, 또는 일하면서 성장하는 길을 그려 봐요. 경로 B를 만지면 경로 A의 번호 칸은 자동으로 접혀요.</p>
+      <div id="bld-B" class="bld"></div></details>
   </div>
   <div class="card">
     <h2>정보 조사 기록</h2>
@@ -351,6 +369,14 @@ table.cpt{min-width:960px} table.cpt textarea{min-height:92px;font-size:14px;pad
     <h2>내 진로경로 미리보기</h2>
     <div id="planPv"></div>
   </div>
+  <div class="card">
+    <h2>👪 부모님(보호자) 의견 듣고 적기</h2>
+    <p class="lead">내가 그린 진로 경로를 부모님(보호자)께 보여 드리고, 들은 의견을 적어요. 의견이 나와 달라도 괜찮아요. 서로 다른 점을 알아 가는 것도 좋은 공부예요.</p>
+    <label class="f" for="r_parent">부모님(보호자)께서 해 주신 말씀·의견</label>
+    <textarea id="r_parent" data-bind="ref.parent" placeholder="예) 수의사는 공부량이 많으니 과학을 꾸준히 해 보라고 하셨다. 대학 학비는 함께 알아보자고 하셨다."></textarea>
+    <p class="tip">선생님께 제출할 때 함께 저장돼요. 적고 싶지 않으면 비워 둬도 돼요.</p>
+  </div>
+    <div class="card"><h2 style="font-size:18px">💾 내 기기(태블릿·스마트폰)에 저장</h2><p class="tip" style="margin:0 0 6px">선생님께 제출하기 전에 내 기기에도 꼭 저장해 두세요. 인터넷이 안 될 때도 내용을 잃지 않아요.</p><div class="savebar" data-savebar></div></div>
   <div class="sticky-next"><button class="btn ghost" data-go="design">← 이전</button><button class="btn" data-go="submit">다음: 제출하기 →</button></div>
 </section>
 
@@ -369,7 +395,7 @@ table.cpt{min-width:960px} table.cpt textarea{min-height:92px;font-size:14px;pad
   </div>
   <div class="card">
     <h2>① 선생님께 제출 <span id="subBadge"></span></h2>
-    <p class="lead">누르면 선생님의 교사용 대시보드(서버)에 저장돼요. 다시 눌러 다시 제출하면 최신 내용이 선생님께 보여요.</p>
+    <p class="lead">누르면 선생님의 교사용 대시보드(서버)에 저장돼요. 내용을 고친 뒤 다시 제출하면 내 칸이 최신 내용으로 바뀌어요(같은 내용은 다시 보내지 않아요).</p>
     <button class="btn big" id="btnSubmit">선생님께 제출하기</button>
     <div id="subMsg" style="margin-top:10px"></div>
   </div>
@@ -378,16 +404,11 @@ table.cpt{min-width:960px} table.cpt textarea{min-height:92px;font-size:14px;pad
     <p class="lead">내 결과를 파일로 저장한 뒤 패들렛에 올려요.</p>
     <ol class="steps">
       <li><b>내 결과 파일 만들기</b>
-        <div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
-          <button class="btn" id="btnPng">이미지(PNG)로 저장</button>
-          <button class="btn ghost" id="btnPdf">PDF로 저장 / 인쇄</button>
-          <button class="btn ghost" id="btnShare" hidden>공유하기</button>
-          <button class="btn ghost" id="btnCopy">글 내용 복사</button>
-        </div>
-        <p class="tip" style="margin-top:6px">PDF 저장이 안 되면 ‘이미지(PNG)’로 저장하거나, ‘글 내용 복사’ 후 삼성 노트에 붙여넣고 PDF로 저장해요.</p>
+        <div class="savebar" data-savebar style="margin-top:6px"></div>
+        <p class="tip" style="margin-top:6px">패들렛에는 ‘이미지(PNG)’ 또는 ‘PDF’ 파일을 올려요. PDF 저장이 안 되면 ‘이미지’로 저장하거나, ‘글 복사’ 후 삼성 노트에 붙여넣고 PDF로 저장해요. ‘백업 파일’은 다른 기기에서 이어 쓸 때 ‘불러오기’로 열어요.</p>
         <img id="pngPrev" alt="내 진로경로 결과 이미지" hidden>
       </li>
-      <li><b>패들렛 열기</b><a class="btn ghost" id="padLink" target="_blank" rel="noopener" style="text-decoration:none;margin-top:6px">패들렛 열기 ↗</a></li>
+      <li><b>패들렛 열기</b><div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:6px"><a class="btn ghost" id="padLink" target="_blank" rel="noopener" style="text-decoration:none;margin:0">패들렛 열기 ↗</a><span style="display:inline-flex;align-items:center;gap:8px"><img id="padQr" alt="패들렛 QR코드" width="96" height="96" style="border:1px solid #ccc;border-radius:6px;background:#fff" src="data:image/png;base64,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"><span class="tip" style="margin:0">다른 기기(스마트폰)로<br>QR을 찍어 열어도 돼요.</span></span></div></li>
       <li><b>＋ 버튼으로 올리기</b>패들렛 오른쪽 아래 ＋ 를 눌러 제목에 <b>‘학번 이름’</b>(예: 10312 김민준)을 쓰고, 저장한 파일을 첨부해 올려요.</li>
     </ol>
   </div>
@@ -414,13 +435,13 @@ const STAGES = {
   work:{l:'취업·창업',c:'#a8e0b4'}, grow:{l:'자기계발·재진학',c:'#f7b9c8'}, etc:{l:'기타',c:'#dfe6e2'}
 };
 const PALETTE = {
-  hs:['일반고 진학','특성화고 진학','마이스터고 진학','과학고 진학','외국어고·국제고 진학','예술고 진학','체육고 진학','자율형 고등학교 진학'],
-  univ:['4년제 대학교 진학','전문대학 진학','대학원 진학','대학교 편입','전문대학원 진학','해외 대학 유학'],
+  hs:['일반고 진학','특성화고 진학','마이스터고 진학','과학고 진학','영재고 진학','외국어고·국제고 진학','예술고 진학','체육고 진학','자사(공)고 진학','대안학교 진학'],
+  univ:['4년제 대학교 진학','전문대학 진학','대학원 진학','대학교 편입','전문대학원 진학','해외 대학 유학','휴학','복학'],
   cert:['대학수학능력시험','국가자격시험 합격','자격증 취득','인턴·실습·수련','공무원·공채 시험','포트폴리오·공모전 준비'],
   work:['취업','창업','프리랜서 활동','전문직 개업·개원'],
   grow:['자기계발(대학교 진학)','야간대학교 진학','방송통신대·사이버대 진학','학점은행제 학점 인증','대학원 진학(자기계발)','재취업·이직']
 };
-const DEC_TPL = ['진학 여부','취업 여부','시험 합격 여부'];
+const DEC_TPL = ['진학 여부','취업 여부','시험 합격 여부','군복무'];
 const TEMPLATES = {
   acad:[
     {name:'일반고 → 대학교 → 취업', n:[['hs','일반고 진학'],['univ','대학교 진학'],['work','취업']]},
@@ -463,7 +484,7 @@ const DOC = {
     {name:'치과의사',what:'치아의 건강을 돌보고 각종 구강질환을 진단하고 치료함',core:'정교한 동작, 움직임 통제, 시력, 반응시간과 속도, 인적 자원관리',major:'치의학과 / 치과의사',field:'병원',way:'치과대학 졸업 또는 치의학전문대학원 졸업 후 치과의사 국가면허시험에 합격해야 함'}
   ]
 };
-const TAGS = [['일반고',/일반\s*고/],['특성화고',/특성화/],['마이스터고',/마이스터/],['특목고·자사고',/과학고|외국어고|외고|국제고|예술고|체육고|영재|자율형|자사고|자립형|특수목적/],
+const TAGS = [['일반고',/일반\s*고/],['특성화고',/특성화/],['마이스터고',/마이스터/],['특목고·자사고',/과학고|외국어고|외고|국제고|예술고|체육고|영재|자율형|자사|자공|자립형|특수목적/],['대안학교',/대안/],
   ['전문대',/전문대학(?!원)|전문대(?!학원)/],['4년제 대학교',/대학교|의과대학|치과대학|대학\s*(진학|입학|졸업|응시)/],['대학원',/대학원|로스쿨|MEET/i],['편입',/편입/],
   ['방송·사이버대',/방송통신|사이버대|방통대/],['학점은행제',/학점\s*(은행|인증)/],['자격·면허시험',/자격|면허|국가시험|전문의/],['인턴·수련',/인턴|레지던트|수련|실습/],
   ['취업',/취업|입사|채용|공무원|직장|병원/],['창업·개업',/창업|개원|개업|프리랜서/],['재취업·이직',/재취업|이직|\(재\)/],['유학',/유학|해외/]];
@@ -483,8 +504,8 @@ const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelect
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const filled=v=>String(v==null?'':v).trim().length>0;
 function fresh(){ return {tab:'learn', me:{school:CONFIG.SCHOOL,g:'',c:'',no:'',name:''}, cp:{job:'',cells:{},cases:'',read1:'',read2:'',sims:[{},{},{}]}, goal:'', A:{nodes:[]}, B:{nodes:[]}, research:[{site:'',found:''},{site:'',found:''},{site:'',found:''}],
-  ref:{why:'',skills:'',prepIn:'',prepOut:'',hard:'',vow:''}, sub:{at:0,id:''}}; }
-function merge(base,src){ if(!src||typeof src!=='object') return base; Object.keys(base).forEach(k=>{ const b=base[k], s=src[k]; if(s===undefined) return; if(b&&typeof b==='object'&&!Array.isArray(b)) base[k]=merge(b,s); else base[k]=s; }); return base; }
+  ref:{why:'',skills:'',prepIn:'',prepOut:'',hard:'',vow:'',parent:''}, sub:{at:0,id:'',h:''}}; }
+function merge(base,src){ if(!src||typeof src!=='object') return base; Object.keys(base).forEach(k=>{ const b=base[k], s=src[k]; if(s===undefined) return; if(b&&typeof b==='object'&&!Array.isArray(b)) base[k]=Object.keys(b).length?merge(b,s):((s&&typeof s==='object'&&!Array.isArray(s))?s:b); else base[k]=s; }); return base; }
 let S=fresh();
 try{ const raw=localStorage.getItem(LS); if(raw) S=merge(fresh(),JSON.parse(raw)); }catch(_){}
 let saveT=0;
@@ -547,31 +568,82 @@ function renderRead(){
   $('#docSim').innerHTML=DOC.sim.map((s,i)=>`<div class="note" style="background:#fdf1ee"><b>직업 ${i+1} · ${esc(s.name)}</b><br><span class="small"><b>하는 일</b> ${esc(s.what)}<br><b>핵심 능력</b> ${esc(s.core)}<br><b>관련학과/자격</b> ${esc(s.major)}${s.field?`<br><b>진출분야</b> ${esc(s.field)}`:''}<br><b>되는 길</b> ${esc(s.way)}</span></div>`).join('');
 }
 /* ===================== 빌더 ===================== */
-const BLD={ A:{nodes:()=>S.A.nodes,goal:()=>S.goal,extra:()=>[],open:true}, B:{nodes:()=>S.B.nodes,goal:()=>S.goal,extra:()=>[],open:false} };
-function nodeHTML(k,n,i,len){ const isD=n.t==='dec';
-  const head=isD?`<input type="text" data-nk="${k}" data-i="${i}" data-f="q" value="${esc(n.q||'')}" placeholder="갈림길 질문 (예: 진학 여부)" maxlength="30" aria-label="갈림길 질문"><input type="text" data-nk="${k}" data-i="${i}" data-f="no" value="${esc(n.no||'')}" placeholder="NO면 어디로? (예: 바로 취업)" maxlength="40" aria-label="NO일 때 이동">`
-   :`<select data-nk="${k}" data-i="${i}" data-f="stage" aria-label="단계 구분">${Object.keys(STAGES).map(s=>`<option value="${s}" ${n.stage===s?'selected':''}>${STAGES[s].l}</option>`).join('')}</select><input type="text" data-nk="${k}" data-i="${i}" data-f="title" value="${esc(n.title||'')}" placeholder="단계 이름 (예: 일반고 진학)" maxlength="40" aria-label="단계 이름">`;
-  return `<div class="nd ${isD?'dec':(n.stage||'etc')}"><div class="h"><span class="num">${i+1}</span>${isD?'<b>◆</b>':''}${head}<span class="mv"><button class="btn ghost sm" data-b="up" data-k="${k}" data-i="${i}" ${i===0?'disabled':''} aria-label="위로">↑</button><button class="btn ghost sm" data-b="down" data-k="${k}" data-i="${i}" ${i===len-1?'disabled':''} aria-label="아래로">↓</button><button class="btn warn sm" data-b="del" data-k="${k}" data-i="${i}" aria-label="삭제">✕</button></span></div>${isD?'':`<div class="memo"><input type="text" data-nk="${k}" data-i="${i}" data-f="memo" value="${esc(n.memo||'')}" placeholder="메모 (선택) 예: 학과 이름, 필요한 점수·조건" maxlength="60" aria-label="메모"></div>`}</div>`; }
-function renderBld(k){ const cfg=BLD[k], nodes=cfg.nodes(), box=$('#bld-'+k); if(!box) return;
-  const extra=cfg.extra();
-  const pal=`<details class="pal" ${cfg.open?'open':''}><summary>카드 골라서 추가하기 (누르면 아래 길에 붙어요)</summary>${extra.length?`<div class="pgrp"><b>★ 추천</b>${extra.map(([st,t])=>`<button class="pchip ${st} rec" data-b="add" data-k="${k}" data-st="${st}" data-ti="${esc(t)}">${esc(t)}</button>`).join('')}</div>`:''}${Object.keys(PALETTE).map(st=>`<div class="pgrp"><b>${STAGES[st].l}</b>${PALETTE[st].map(t=>`<button class="pchip ${st}" data-b="add" data-k="${k}" data-st="${st}" data-ti="${esc(t)}">${esc(t)}</button>`).join('')}</div>`).join('')}<div class="pgrp"><b>◆ 갈림길</b>${DEC_TPL.map(t=>`<button class="pchip" style="background:#cfe6ff" data-b="adddec" data-k="${k}" data-ti="${esc(t)}">${esc(t)}</button>`).join('')}</div></details>`;
-  box.innerHTML=`${pal}<div class="nodes">${nodes.length?nodes.map((n,i)=>nodeHTML(k,n,i,nodes.length)).join(''):'<div class="tip" style="padding:8px">위 카드를 눌러 길을 만들어 보세요. 순서는 ↑ ↓ 로 바꿀 수 있어요.</div>'}</div>
-  <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn ghost sm" data-b="addstep" data-k="${k}">＋ 내 단계 직접 쓰기</button><button class="btn ghost sm" data-b="adddec" data-k="${k}" data-ti="">＋ 갈림길(YES/NO)</button><button class="btn warn sm" data-b="clear" data-k="${k}">모두 지우기</button></div>
-  <div class="pv"><b>내가 그린 길</b><div id="pv-${k}"></div></div>`;
+const BLD={ A:{nodes:()=>S.A.nodes}, B:{nodes:()=>S.B.nodes} };
+const UI={list:{A:true,B:true}};
+function nodeHTML(k,n,i){ const isD=n.t==='dec';
+  const f=(fld,ph,ml,cls)=>`<input type="text" class="${cls}" data-nk="${k}" data-i="${i}" data-f="${fld}" value="${esc(n[fld]||'')}" placeholder="${ph}" maxlength="${ml}" aria-label="${ph}">`;
+  const body=isD? f('q','갈림길 질문 (예: 진학 여부)',30,'g1')+f('no','NO면 어디로? (예: 바로 취업)',40,'g2')
+    : `<select data-nk="${k}" data-i="${i}" data-f="stage" aria-label="단계 구분">${Object.keys(STAGES).map(x=>`<option value="${x}" ${n.stage===x?'selected':''}>${STAGES[x].l}</option>`).join('')}</select>`+f('title','단계 이름 (예: 일반고 진학)',40,'g1')+f('memo','메모 (선택) 예: 학과, 필요 조건',60,'g2');
+  return `<div class="nd ${isD?'dec':(STAGES[n.stage]?n.stage:'etc')}" data-di="${i}"><span class="num">${i+1}</span>${isD?'<b class="dm">◆</b>':''}${body}<button class="dh" type="button" data-drag="node" data-k="${k}" data-i="${i}" aria-label="${i+1}번 칸 끌어서 순서 바꾸기 (키보드는 위·아래 화살표)" title="끌어서 순서 바꾸기">⋮</button><button class="xb" type="button" data-b="del" data-k="${k}" data-i="${i}" aria-label="${i+1}번 칸 삭제">✕</button></div>`; }
+function flowDrag(k){ const nodes=BLD[k].nodes(), p=['<div class="fn start" data-edge="start">출발</div>'];
+  nodes.forEach((n,i)=>{ const dg=`data-drag="node" data-k="${k}" data-i="${i}" data-di="${i}"`;
+    p.push(n.t==='dec'?`<div class="fn dec dg" ${dg}><b>◆ ${esc(n.q||'갈림길')}?</b>${n.no?`<small>NO → ${esc(n.no)}</small>`:''}</div>`:`<div class="fn ${STAGES[n.stage]?n.stage:'etc'} dg" ${dg}>${esc(n.title||'(단계 이름)')}</div>`); });
+  p.push(`<div class="fn goal" data-edge="end">♥ ${esc(S.goal||'목표 직업')}</div>`);
+  return `<div class="flow">${p.join('<i class="ar">→</i>')}</div>`; }
+const chipHTML=(k,st,t)=>`<button type="button" class="pchip ${st}" data-b="add" data-k="${k}" data-st="${st}" data-ti="${esc(t)}" data-drag="chip">${esc(t)}</button>`;
+function renderBld(k){ const box=$('#bld-'+k); if(!box) return; const nodes=BLD[k].nodes();
+  const tplOpts=['acad','work'].map(g=>`<optgroup label="${g==='acad'?'학업 중심':'취업 후 성장'}">${TEMPLATES[g].map((t,n)=>`<option value="${g}:${n}">${esc(t.name)}</option>`).join('')}</optgroup>`).join('');
+  const pal=Object.keys(PALETTE).map(st=>`<div class="pgrp"><b>${STAGES[st].l}</b>${PALETTE[st].map(t=>chipHTML(k,st,t)).join('')}</div>`).join('')
+    +`<div class="pgrp"><b>◆ 갈림길</b>${DEC_TPL.map(t=>`<button type="button" class="pchip dec" data-b="adddec" data-k="${k}" data-ti="${esc(t)}" data-drag="chip" data-dec="1">${esc(t)}</button>`).join('')}</div>`;
+  box.innerHTML=`<div class="wbox">
+  <div class="wh"><b>① 카드 골라서 추가하기</b><span class="tip">누르거나, 아래 ‘내가 그린 길’로 끌어다 놓아요.</span><select class="tplsel" data-tpl="${k}" aria-label="예시 가져와서 고치기"><option value="">예시 가져와서 고치기 ▾</option>${tplOpts}</select></div>
+  ${pal}
+  <div class="mypath" data-drop="${k}"><div class="wh"><b>② 내가 그린 길</b><span class="tip">카드를 끌어다 놓고, 그려진 칸도 끌어서 순서를 바꿔요. (태블릿은 꾹 눌렀다가 끌기)</span></div><div id="pv-${k}"></div></div>
+  <details class="listbox" id="lb-${k}" ${UI.list[k]?'open':''}><summary>③ 번호별로 쓰기·고치기 <small class="muted" id="ln-${k}"></small></summary>
+    <div class="nodes" data-drop="${k}" data-axis="y">${nodes.length?nodes.map((n,i)=>nodeHTML(k,n,i)).join(''):'<div class="tip" style="padding:6px">위 카드를 눌러 길을 만들어 보세요. 오른쪽 ⋮ 를 끌면 순서가 바뀌어요.</div>'}</div>
+    <div class="brow"><button type="button" class="btn ghost sm" data-b="addstep" data-k="${k}">＋ 내 단계 직접 쓰기</button><button type="button" class="btn ghost sm" data-b="adddec" data-k="${k}" data-ti="">＋ 갈림길(YES/NO)</button><button type="button" class="btn warn sm" data-b="clear" data-k="${k}">모두 지우기</button></div>
+  </details></div>`;
   updPv(k); }
-function updPv(k){ const el=$('#pv-'+k); if(el) el.innerHTML=flowHTML(BLD[k].nodes(),BLD[k].goal()); renderTabs(); }
+function updPv(k){ const el=$('#pv-'+k); if(el) el.innerHTML=flowDrag(k); const n=BLD[k].nodes().length; const c=$('#cnt-'+k); if(c) c.textContent=n?`· ${n}칸`:''; const l=$('#ln-'+k); if(l) l.textContent=`(${n}칸)`; renderTabs(); }
+function focusPath(k){ if(k==='B'){ UI.list.A=false; const lb=$('#lb-A'); if(lb) lb.open=false; } }
 function bldClick(e){ const b=e.target.closest('[data-b]'); if(!b) return false; const k=b.dataset.k, act=b.dataset.b, nodes=k?BLD[k].nodes():null; const i=+b.dataset.i;
+  if(!nodes) return false; focusPath(k);
   if(act==='add') nodes.push({t:'step',stage:b.dataset.st,title:b.dataset.ti,memo:''});
   else if(act==='addstep') nodes.push({t:'step',stage:'etc',title:'',memo:''});
   else if(act==='adddec') nodes.push({t:'dec',q:b.dataset.ti||'',no:''});
-  else if(act==='up'&&i>0) [nodes[i-1],nodes[i]]=[nodes[i],nodes[i-1]];
-  else if(act==='down'&&i<nodes.length-1) [nodes[i+1],nodes[i]]=[nodes[i],nodes[i+1]];
   else if(act==='del') nodes.splice(i,1);
   else if(act==='clear'){ if(!nodes.length) return true; if(b.dataset.arm!=='1'){ b.dataset.arm='1'; b.textContent='정말 지울까요? 한 번 더'; setTimeout(()=>{ b.dataset.arm=''; b.textContent='모두 지우기'; },3500); return true; } nodes.length=0; }
-  else if(act==='tpl'){ const T=TEMPLATES[b.dataset.g][+b.dataset.n]; if(nodes.length && !confirm('지금 만든 경로를 이 예시로 바꿀까요?')) return true; nodes.length=0; T.n.forEach(([st,t])=>nodes.push({t:'step',stage:st,title:t,memo:''})); }
   else return false;
-  save(); renderBld(k); return true; }
-function renderTpl(){ ['A','B'].forEach(k=>{ $('#tpl'+k).innerHTML='<span class="tip">예시 가져와서 고치기:</span>'+['acad','work'].flatMap(g=>TEMPLATES[g].map((t,n)=>`<button class="pchip" data-b="tpl" data-k="${k}" data-g="${g}" data-n="${n}">${g==='acad'?'학업':'취업 후'} · ${esc(t.name)}</button>`)).join(''); }); }
+  save(); renderBld(k); renderPlanPv(); return true; }
+function applyTpl(k,val){ const [g,n]=val.split(':'), T=TEMPLATES[g]&&TEMPLATES[g][+n]; if(!T) return; const nodes=BLD[k].nodes();
+  if(nodes.length && !confirm('지금 만든 경로를 이 예시로 바꿀까요?')) return;
+  nodes.length=0; T.n.forEach(([st,t])=>nodes.push({t:'step',stage:st,title:t,memo:''})); focusPath(k); save(); renderBld(k); renderPlanPv(); }
+function moveNode(k,i,to){ const nodes=BLD[k].nodes(); if(i<0||i>=nodes.length) return -1; to=Math.max(0,Math.min(nodes.length-1,to)); if(to===i) return i; const [it]=nodes.splice(i,1); nodes.splice(to,0,it); save(); return to; }
+
+/* ----- 끌어다 놓기 (마우스·터치 공용, 포인터 이벤트) ----- */
+const DND={p:null,on:false,g:null,drop:null,last:null,tm:0,iv:0,endAt:0};
+function dndTarget(x,y){ const els=document.elementsFromPoint(x,y), c=els.map(e=>e.closest&&e.closest('[data-drop]')).find(Boolean); return c||null; }
+function dndIdx(c,x,y){ const k=c.dataset.drop, n=BLD[k].nodes().length, items=[...c.querySelectorAll('[data-di],[data-edge]')], y_=c.dataset.axis==='y';
+  if(!items.length) return {k,idx:n,el:null,cls:''};
+  let best=null,bd=1e12; items.forEach(el=>{ const r=el.getBoundingClientRect(), dx=Math.max(r.left-x,0,x-r.right), dy=Math.max(r.top-y,0,y-r.bottom), d=dx*dx+dy*dy; if(d<bd){ bd=d; best=el; } });
+  const r=best.getBoundingClientRect(); if(best.dataset.edge==='start') return {k,idx:0,el:best,cls:'daft'}; if(best.dataset.edge==='end') return {k,idx:n,el:best,cls:'dbef'};
+  const same=y>=r.top&&y<=r.bottom, after=y_?(y>r.top+r.height/2):(same?(x>r.left+r.width/2):(y>r.top+r.height/2));
+  return {k,idx:(+best.dataset.di)+(after?1:0),el:best,cls:after?'daft':'dbef'}; }
+function dndClear(){ $$('.dbef,.daft,.dover').forEach(e=>e.classList.remove('dbef','daft','dover')); }
+function dndBegin(e){ const p=DND.p; if(!p||DND.on) return; DND.on=true; const g=document.createElement('div'); g.className='dndg'; g.textContent=(p.s.textContent||'').trim().slice(0,22)||'카드'; document.body.appendChild(g); DND.g=g; try{ navigator.vibrate&&navigator.vibrate(12); }catch(_){}
+  DND.iv=setInterval(()=>{ const l=DND.last; if(!l) return; if(l.clientY<70) window.scrollBy(0,-14); else if(l.clientY>innerHeight-70) window.scrollBy(0,14); },40); dndMove(e); }
+function dndMove(e){ const p=DND.p; if(!p||!DND.on) return; DND.last=e; DND.g.style.left=(e.clientX+12)+'px'; DND.g.style.top=(e.clientY+12)+'px'; dndClear(); DND.drop=null;
+  const c=dndTarget(e.clientX,e.clientY); if(!c) return; const k=c.dataset.drop; if(p.s.dataset.drag==='node'&&p.s.dataset.k!==k) return;
+  const d=dndIdx(c,e.clientX,e.clientY); DND.drop=d; c.classList.add('dover'); if(d.el) d.el.classList.add(d.cls); }
+function dndEnd(ok){ const p=DND.p, d=DND.drop; clearInterval(DND.iv); clearTimeout(DND.tm); dndClear(); if(DND.g){ DND.g.remove(); DND.g=null; }
+  const was=DND.on; DND.on=false; DND.p=null; DND.drop=null; if(was) DND.endAt=Date.now(); if(!was||!ok||!d||!p) return;
+  const nodes=BLD[d.k].nodes(), s=p.s;
+  if(s.dataset.drag==='chip') nodes.splice(d.idx,0,s.dataset.dec?{t:'dec',q:s.dataset.ti||'',no:''}:{t:'step',stage:s.dataset.st,title:s.dataset.ti,memo:''});
+  else { const i0=+s.dataset.i; if(!(i0>=0&&i0<nodes.length)) return; const [it]=nodes.splice(i0,1); let idx=d.idx; if(idx>i0) idx--; nodes.splice(idx,0,it); }
+  focusPath(d.k); save(); renderBld(d.k); renderPlanPv(); }
+document.addEventListener('pointerdown',e=>{ if(e.pointerType==='mouse'&&e.button!==0) return; const s=e.target.closest('[data-drag]'); if(!s) return;
+  const touch=e.pointerType!=='mouse', handle=s.classList.contains('dh'); DND.p={s,x:e.clientX,y:e.clientY,touch,handle}; DND.last=e;
+  if(touch&&!handle){ clearTimeout(DND.tm); DND.tm=setTimeout(()=>{ if(DND.p&&!DND.on) dndBegin(DND.last); },300); } });
+document.addEventListener('pointermove',e=>{ const p=DND.p; if(!p) return; DND.last=e;
+  if(!DND.on){ if(Math.hypot(e.clientX-p.x,e.clientY-p.y)<=8) return; if(p.touch&&!p.handle){ clearTimeout(DND.tm); DND.p=null; return; } dndBegin(e); return; }
+  dndMove(e); });
+document.addEventListener('pointerup',()=>dndEnd(true)); document.addEventListener('pointercancel',()=>dndEnd(false));
+document.addEventListener('touchmove',e=>{ if(DND.on&&e.cancelable) e.preventDefault(); },{passive:false});
+document.addEventListener('contextmenu',e=>{ if(DND.p&&DND.p.touch) e.preventDefault(); });
+document.addEventListener('click',e=>{ if(Date.now()-DND.endAt<400){ e.stopPropagation(); e.preventDefault(); } },true);
+document.addEventListener('keydown',e=>{ const h=e.target.closest&&e.target.closest('.dh'); if(!h||(e.key!=='ArrowUp'&&e.key!=='ArrowDown')) return; e.preventDefault();
+  const k=h.dataset.k, i=+h.dataset.i, to=moveNode(k,i,i+(e.key==='ArrowUp'?-1:1)); if(to<0||to===i) return; focusPath(k); renderBld(k); renderPlanPv(); const nh=$(`#bld-${k} .dh[data-i="${to}"]`); if(nh) nh.focus(); });
+document.addEventListener('toggle',e=>{ const d=e.target; if(d&&d.id&&d.id.indexOf('lb-')===0) UI.list[d.id.slice(3)]=d.open; },true);
 
 /* ===================== 커리어패스 양식 (첨부 1·2 양식) ===================== */
 const lines=t=>String(t||'').split('\n').map(x=>x.trim()).filter(Boolean);
@@ -599,29 +671,35 @@ function subChecks(){ const a=cleanNodes(S.A.nodes), b=cleanNodes(S.B.nodes), rs
   return [[ '내 정보(학년·반·번호·이름)를 적었어요',meOK(),true],['목표 직업을 적었어요',filled(S.goal),true],['경로 A를 3단계 이상 그렸어요',a.length>=3,true],
     ['경로 B(플랜 B)를 그렸어요',b.length>=1,false],['정보 조사 기록이 1개 이상 있어요',rs.length>=1,false],['준비할 일(학교 안·밖)을 적었어요',filled(S.ref.prepIn)||filled(S.ref.prepOut),false],['커리어패스 양식을 8칸 이상 작성했어요',cpFilled()>=8,false]]; }
 function renderSubmit(){ const c=subChecks(); $('#subCheck').innerHTML=c.map(([l,ok,req])=>`<li class="${ok?'ok':''}">${esc(l)}${req?' <small class="muted">(필수)</small>':''}</li>`).join('');
-  $('#subBadge').innerHTML=S.sub.at?`<span class="badge-done">제출 완료 · ${fmtT(S.sub.at)}</span>`:''; $('#padLink').href=CONFIG.PADLET_URL; $('#btnShare').hidden=!(navigator.canShare&&navigator.share); }
+  $('#subBadge').innerHTML=S.sub.at?`<span class="badge-done">제출 완료 · ${fmtT(S.sub.at)}</span>`:''; $('#padLink').href=CONFIG.PADLET_URL; }
 const fmtT=ms=>{ const d=new Date(ms); return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; };
-function buildData(){ const a=cleanNodes(S.A.nodes), b=cleanNodes(S.B.nodes);
-  return {v:2, me:{school:val(S.me.school),g:+S.me.g,c:+S.me.c,no:+S.me.no,name:val(S.me.name)}, goal:val(S.goal),
-    pathA:{nodes:a,tags:classify(a),summary:summary(a,S.goal)}, pathB:{nodes:b,tags:classify(b),summary:summary(b,S.goal)},
-    research:S.research.filter(r=>filled(r.site)||filled(r.found)).map(r=>({site:val(r.site),found:val(r.found)})),
-    reflect:{why:val(S.ref.why),skills:val(S.ref.skills),prepIn:val(S.ref.prepIn),prepOut:val(S.ref.prepOut),hard:val(S.ref.hard),vow:val(S.ref.vow)},
-    read:{read1:val(S.cp.read1),read2:val(S.cp.read2)}, careerpath:cpData(), client:{at:Date.now(),ver:'path-2'}}; }
+const TT=(v,n)=>val(v).slice(0,n);
+function buildData(){ const a=cleanNodes(S.A.nodes), b=cleanNodes(S.B.nodes), cp=cpData(), cells={};
+  Object.keys(cp.cells||{}).forEach(k=>{ const v=TT(cp.cells[k],300); if(v) cells[k]=v; });
+  const sims=(cp.sims||[]).slice(0,3).map(o=>{ const r={}; Object.keys(o).forEach(f=>r[f]=TT(o[f],f==='way'?200:120)); return r; });
+  return {v:3, me:{school:val(S.me.school),g:+S.me.g,c:+S.me.c,no:+S.me.no,name:val(S.me.name)}, goal:TT(S.goal,40),
+    pathA:{nodes:a,tags:classify(a),summary:TT(summary(a,S.goal),600)}, pathB:{nodes:b,tags:classify(b),summary:TT(summary(b,S.goal),600)},
+    research:S.research.filter(r=>filled(r.site)||filled(r.found)).map(r=>({site:TT(r.site,40),found:TT(r.found,150)})),
+    reflect:{why:TT(S.ref.why,400),skills:TT(S.ref.skills,400),prepIn:TT(S.ref.prepIn,400),prepOut:TT(S.ref.prepOut,400),hard:TT(S.ref.hard,400),vow:TT(S.ref.vow,100),parent:TT(S.ref.parent,400)},
+    read:{read1:TT(S.cp.read1,300),read2:TT(S.cp.read2,300)}, careerpath:{job:TT(cp.job,40),cells,cases:TT(cp.cases,600),sims,filled:cp.filled,pathTags:cp.pathTags}, client:{ver:'path-3'}}; }
+const hashOf=t=>{ let h=5381; for(let i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; return (h>>>0).toString(36)+':'+t.length; };
 let submitting=false;
 async function submit(){ if(submitting) return; const c=subChecks(), miss=c.filter(x=>x[2]&&!x[1]);
   if(miss.length){ $('#subMsg').innerHTML=`<div class="warnbox">먼저 채워야 할 곳이 있어요: ${miss.map(x=>esc(x[0])).join(' / ')}</div>`; return; }
+  const data0=buildData(), h0=hashOf(JSON.stringify(data0));
+  if(S.sub.at&&S.sub.h===h0){ $('#subMsg').innerHTML=`<div class="okbox"><b>이미 같은 내용을 제출했어요.</b> 접수번호 <b>${esc(S.sub.id||'')}</b> · ${fmtT(S.sub.at)}<br>내용을 고친 뒤에 다시 제출하면 선생님께 최신 내용이 보여요.</div>`; return; }
   submitting=true; const btn=$('#btnSubmit'); btn.disabled=true; btn.textContent='제출하는 중…'; $('#subMsg').innerHTML='';
-  try{ const data=buildData(); let r;
+  try{ const data=data0; let r;
     if(DEMO){ await new Promise(s=>setTimeout(s,500)); r={ok:true,id:'DEMO-'+Date.now().toString(36),at:Date.now()}; }
     else{ const res=await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({a:'pathSubmit',p:{data}})}); r=await res.json(); if(r&&r.error) throw new Error(r.error.message||'서버 오류'); }
-    S.sub={at:r.at||Date.now(),id:r.id||''}; save(); renderTabs(); renderSubmit();
+    S.sub={at:r.at||Date.now(),id:r.id||'',h:h0}; save(); renderTabs(); renderSubmit();
     $('#subMsg').innerHTML=`<div class="okbox"><b>제출 완료!</b> 접수번호 <b>${esc(r.id||'')}</b> · ${fmtT(S.sub.at)}<br>이제 아래 ②번 패들렛 제출도 해 주세요.</div>`;
   }catch(err){ $('#subMsg').innerHTML=`<div class="warnbox"><b>서버에 저장하지 못했어요.</b> ${esc(err.message||'')}<br>인터넷 연결을 확인하고 다시 눌러 보세요. 계속 안 되면 아래 ②번 패들렛으로 먼저 제출하고 선생님께 알려 주세요.</div>`; }
   finally{ submitting=false; btn.disabled=false; btn.textContent='선생님께 제출하기'; } }
 
 /* ----- 패들렛용 결과물 ----- */
 function reportSections(){ const r=S.ref, rs=S.research.filter(x=>filled(x.site)||filled(x.found));
-  return [['왜 이 경로를 선택했나요?',r.why],['필요한 자격·역량',r.skills],['학교 안에서 할 수 있는 준비',r.prepIn],['학교 밖에서 할 수 있는 준비',r.prepOut],['예상되는 어려움과 극복 방법',r.hard],['한 줄 다짐',r.vow],
+  return [['왜 이 경로를 선택했나요?',r.why],['필요한 자격·역량',r.skills],['학교 안에서 할 수 있는 준비',r.prepIn],['학교 밖에서 할 수 있는 준비',r.prepOut],['예상되는 어려움과 극복 방법',r.hard],['한 줄 다짐',r.vow],['부모님(보호자) 의견',r.parent],['부모님(보호자) 의견',r.parent],
     [`커리어패스 양식 — ${S.cp.job||''} (경로)`,CP_ST.map(x=>lines(S.cp.cells[cellKey('path',x[0])]).length?`${x[1]}: ${lines(S.cp.cells[cellKey('path',x[0])]).join(' / ')}`:'').filter(Boolean).join('\n')],['정보 조사 기록',rs.map(x=>`· ${x.site||'-'}: ${x.found||''}`).join('\n')]].filter(x=>filled(x[1])); }
 function textReport(){ const m=S.me; const a=cleanNodes(S.A.nodes), b=cleanNodes(S.B.nodes); let t=`[진로 활동 4] 나의 진로 경로 계획하기\n${m.school||''} ${m.g}학년 ${m.c}반 ${m.no}번 ${m.name}\n\n(${S.goal||''})이 되기 위한 나의 진로 경로\n\n▶ 경로 A\n출발 → ${summary(a,S.goal)}\n`;
   if(b.length) t+=`\n▶ 경로 B\n출발 → ${summary(b,S.goal)}\n`; reportSections().forEach(([h,v])=>t+=`\n■ ${h}\n${v}\n`); return t; }
@@ -660,6 +738,42 @@ async function doPng(share){ if(!meOK()||!filled(S.goal)){ toast('내 정보와 
     const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); toast('저장했어요. 안 보이면 아래 그림을 길게 눌러 저장하세요.');
   }catch(e){ if(e&&e.name==='AbortError') return; toast(e.message||'이미지를 만들지 못했어요.'); } }
 
+/* ===================== 내 기기에 저장·불러오기 ===================== */
+function fullText(){ const m=S.me, a=cleanNodes(S.A.nodes), b=cleanNodes(S.B.nodes), r=S.ref, rs=S.research.filter(x=>filled(x.site)||filled(x.found));
+  let t=`[진로 활동 4] 나의 진로 경로 계획하기\n${m.school||''} ${m.g}학년 ${m.c}반 ${m.no}번 ${m.name}\n저장한 때: ${new Date().toLocaleString('ko-KR')}\n\n■ 목표 직업: ${S.goal||''}\n`;
+  t+=`\n■ 3. 설계 실습 — 커리어패스 양식 (${S.cp.job||'조사 직업 미입력'})\n`;
+  CP_ROWS.forEach(row=>{ t+=`[${row[1]}]\n`; CP_ST.forEach(st=>{ const v=S.cp.cells[cellKey(row[0],st[0])]; if(filled(v)) t+=`  ${st[1]}: ${lines(v).join(' / ')}\n`; }); });
+  if(filled(S.cp.cases)) t+=`\n[관련 사례]\n${S.cp.cases}\n`;
+  S.cp.sims.forEach((sm,i)=>{ if(Object.values(sm).some(filled)) t+=`\n[비슷한 직업 ${i+1}] ${CP_SIM_F.map(([f,l])=>filled(sm[f])?`${l}: ${sm[f]}`:'').filter(Boolean).join(' | ')}\n`; });
+  if(filled(S.cp.read1)||filled(S.cp.read2)) t+=`\n[읽기 메모]\n${[S.cp.read1,S.cp.read2].filter(filled).join('\n')}\n`;
+  t+=`\n■ 4. 나의 진로경로\n▶ 경로 A\n출발 → ${summary(a,S.goal)}\n${a.map((n,i)=>`  ${i+1}. ${n.t==='dec'?`◆ ${n.q}? (NO → ${n.no||'-'})`:`${n.title}${n.memo?` (${n.memo})`:''}`}`).join('\n')}\n`;
+  if(b.length) t+=`\n▶ 경로 B (플랜 B)\n출발 → ${summary(b,S.goal)}\n${b.map((n,i)=>`  ${i+1}. ${n.t==='dec'?`◆ ${n.q}? (NO → ${n.no||'-'})`:`${n.title}${n.memo?` (${n.memo})`:''}`}`).join('\n')}\n`;
+  if(rs.length) t+=`\n[정보 조사 기록]\n${rs.map(x=>`· ${x.site||'-'}: ${x.found||''}`).join('\n')}\n`;
+  [['선택한 이유',r.why],['필요한 자격·역량',r.skills],['학교 안 준비',r.prepIn],['학교 밖 준비',r.prepOut],['어려움과 극복',r.hard],['한 줄 다짐',r.vow],['부모님(보호자) 의견',r.parent]].forEach(([h,v])=>{ if(filled(v)) t+=`\n[${h}]\n${v}\n`; });
+  return t; }
+function dlBlob(blob,name){ const u=URL.createObjectURL(blob), a=document.createElement('a'); a.href=u; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); }
+function saveAct(k){
+  if(k==='png') return doPng(false);
+  if(k==='share') return doPng(true);
+  if(k==='pdf'){ if(!meOK()||!filled(S.goal)){ toast('내 정보와 목표 직업을 먼저 적어 주세요.'); return; } $('#printArea').innerHTML=printHTML(); setTimeout(()=>window.print(),80); return; }
+  if(k==='copy') return copyText(textReport()).then(ok=>toast(ok?'복사했어요. 삼성 노트·메모에 붙여넣어 보세요.':'복사하지 못했어요.'));
+  if(k==='txt'){ dlBlob(new Blob(['﻿'+fullText()],{type:'text/plain;charset=utf-8'}),fileBase()+'.txt'); toast('글 파일(.txt)로 저장했어요. 내 기기의 ‘다운로드’ 폴더를 확인해 보세요.'); return; }
+  if(k==='json'){ dlBlob(new Blob([JSON.stringify({kind:'jinro-backup',v:1,savedAt:Date.now(),data:S})],{type:'application/json'}),fileBase()+'_백업.json'); toast('백업 파일(.json)로 저장했어요. ‘불러오기’로 다시 열 수 있어요.'); } }
+function renderSaveBars(){ const can=navigator.canShare&&navigator.share;
+  const h=`<button type="button" class="btn" data-sv="png">🖼 이미지(PNG)</button><button type="button" class="btn ghost" data-sv="pdf">📄 PDF·인쇄</button><button type="button" class="btn ghost" data-sv="txt">📝 글 파일(.txt)</button><button type="button" class="btn ghost" data-sv="json">💾 백업 파일(.json)</button><button type="button" class="btn ghost" data-sv="copy">📋 글 복사</button>${can?'<button type="button" class="btn ghost" data-sv="share">📤 공유</button>':''}<label class="btn ghost" style="cursor:pointer">📂 불러오기<input type="file" class="importFile" accept=".json,application/json" hidden></label>`;
+  $$('[data-savebar]').forEach(b=>b.innerHTML=h); }
+function sanitizeS(){ if(!Array.isArray(S.A.nodes)) S.A.nodes=[]; if(!Array.isArray(S.B.nodes)) S.B.nodes=[];
+  [S.A.nodes,S.B.nodes].forEach(arr=>arr.forEach(n=>{ if(n.t!=='dec'){ n.t='step'; if(!STAGES[n.stage]) n.stage='etc'; } }));
+  if(!S.cp.cells||typeof S.cp.cells!=='object') S.cp.cells={}; if(!Array.isArray(S.cp.sims)) S.cp.sims=[]; while(S.cp.sims.length<3) S.cp.sims.push({});
+  if(!Array.isArray(S.research)) S.research=[]; while(S.research.length<3) S.research.push({site:'',found:''}); }
+function reloadAll(){ renderCP(); renderBld('A'); renderBld('B'); renderResearch(); hydrate(); updCP(); renderPlanPv(); renderSubmit(); renderTabs(); renderSaveBars(); $('#who').textContent=whoText(); }
+function importFile(file){ const rd=new FileReader(); rd.onload=()=>{ let o; try{ o=JSON.parse(rd.result); }catch(_){ toast('파일을 읽지 못했어요. .json 파일인지 확인해 주세요.'); return; }
+    if(o&&o.kind==='jinro-backup'&&o.data){ if(!confirm('지금 작성 중인 내용이 파일의 내용으로 바뀌어요. 계속할까요?')) return; const tab=S.tab; S=merge(fresh(),o.data); S.tab=tab; }
+    else if(o&&o.kind==='jinro-sample'){ if(!confirm('선생님 예시 파일의 ③ 설계 실습·④ 경로 내용으로 바뀌어요. (내 정보는 그대로예요) 계속할까요?')) return; const me=S.me, sub=S.sub, tab=S.tab; S=merge(fresh(),{cp:o.cp,goal:o.goal,A:o.A,B:o.B,ref:o.ref}); S.me=me; S.sub=sub; S.tab=tab; }
+    else { toast('이 앱에서 저장한 백업 파일이나 선생님 예시 파일이 아니에요.'); return; }
+    sanitizeS(); save(); reloadAll(); toast('불러왔어요.'); };
+  rd.readAsText(file); }
+
 /* ===================== 이벤트 ===================== */
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-tab]'); if(t&&t.classList.contains('tab')){ go(t.dataset.tab); return; }
@@ -668,22 +782,21 @@ document.addEventListener('click',e=>{
   if(e.target.closest('#cpSample')){ if(cpFilled()&&!confirm('지금 쓴 칸이 예시 내용으로 바뀌어요. 계속할까요?')) return; S.cp.job=CP_SAMPLE.job; S.cp.cells=Object.assign({},CP_SAMPLE.cells); S.cp.cases=CP_SAMPLE.cases; S.cp.sims=CP_SAMPLE.sims.map(x=>Object.assign({},x)); save(); renderCP(); hydrate(); updCP(); return; }
   if(e.target.closest('#cpClear')){ const b=$('#cpClear'); if(b.dataset.arm!=='1'){ b.dataset.arm='1'; b.textContent='정말 비울까요? 한 번 더'; setTimeout(()=>{ b.dataset.arm=''; b.textContent='칸 모두 비우기'; },3500); return; } S.cp.cells={}; S.cp.cases=''; S.cp.sims=[{},{},{}]; S.cp.job=''; save(); renderCP(); hydrate(); updCP(); return; }
   if(e.target.closest('#btnSubmit')) submit();
-  if(e.target.closest('#btnPng')) doPng(false);
-  if(e.target.closest('#btnShare')) doPng(true);
-  if(e.target.closest('#btnPdf')){ if(!meOK()||!filled(S.goal)){ toast('내 정보와 목표 직업을 먼저 적어 주세요.'); return; } $('#printArea').innerHTML=printHTML(); setTimeout(()=>window.print(),80); }
-  if(e.target.closest('#btnCopy')){ copyText(textReport()).then(ok=>toast(ok?'복사했어요. 삼성 노트·메모에 붙여넣어 보세요.':'복사하지 못했어요.')); }
+  const sv=e.target.closest('[data-sv]'); if(sv) saveAct(sv.dataset.sv);
   if(e.target.closest('#btnReset')){ const b=$('#btnReset'); if(b.dataset.arm!=='1'){ b.dataset.arm='1'; b.textContent='정말 모두 지울까요? 한 번 더'; setTimeout(()=>{ b.dataset.arm=''; b.textContent='처음부터 다시 하기'; },4000); return; } try{ localStorage.removeItem(LS); }catch(_){} S=fresh(); init(); toast('처음 상태로 돌렸어요.'); }
 });
 document.addEventListener('input',e=>{ const el=e.target;
-  if(el.dataset&&el.dataset.nk){ const n=BLD[el.dataset.nk].nodes()[+el.dataset.i]; if(n){ n[el.dataset.f]=el.value; save(); updPv(el.dataset.nk); if(el.dataset.nk==='A') renderPlanPv(); } return; }
+  if(el.dataset&&el.dataset.nk){ focusPath(el.dataset.nk); const n=BLD[el.dataset.nk].nodes()[+el.dataset.i]; if(n){ n[el.dataset.f]=el.value; save(); updPv(el.dataset.nk); if(el.dataset.nk==='A') renderPlanPv(); } return; }
   if(el.dataset&&el.dataset.bind){ const v=el.type==='number'?el.value.replace(/\D/g,''):el.value; setP(S,el.dataset.bind,v); $$(`[data-bind="${el.dataset.bind}"]`).forEach(o=>{ if(o!==el&&o.value!==v) o.value=v; }); save(); $('#who').textContent=whoText(); renderTabs(); if(el.dataset.after==='refreshAll') refreshAll(); if(el.dataset.after==='cpPv') updCP(); } });
 document.addEventListener('change',e=>{ const el=e.target;
+  if(el.classList&&el.classList.contains('importFile')){ const f=el.files&&el.files[0]; el.value=''; if(f) importFile(f); return; }
+  if(el.dataset&&el.dataset.tpl){ const v=el.value; el.value=''; if(v) applyTpl(el.dataset.tpl,v); return; }
   if(el.dataset&&el.dataset.nk&&el.dataset.f==='stage'){ BLD[el.dataset.nk].nodes()[+el.dataset.i].stage=el.value; save(); renderBld(el.dataset.nk); return; }
   if(el.dataset&&el.dataset.bind){ setP(S,el.dataset.bind,el.value); save(); return; } });
 
 /* ===================== 시작 ===================== */
 function hydrate(){ $$('[data-bind]').forEach(el=>{ const v=getP(S,el.dataset.bind); if(v!=null) el.value=v; }); }
-function init(){ renderLearn(); renderRead(); renderCP(); renderTpl(); renderBld('A'); renderBld('B'); renderResearch();
+function init(){ renderLearn(); renderRead(); renderCP(); renderBld('A'); renderBld('B'); renderResearch(); renderSaveBars();
   $('#exFlow').innerHTML=flowHTML(EXAMPLE.nodes,EXAMPLE.goal); hydrate(); updCP(); renderPlanPv(); go(S.tab||'learn'); }
 init();
 if(DEMO&&location.hash==='#demo'){ document.title+=' (미리보기)'; }
