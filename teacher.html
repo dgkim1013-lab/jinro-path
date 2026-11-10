@@ -199,51 +199,144 @@ function csvCells(){const P=cur(),out=[['접수번호','학년','반','번호','
 /* ===== AI 자동완성: 직업명 → ③ 설계 실습 + ④ 나의 진로경로 ===== */
 let GEN=null;
 const GKEYS=ROWS.flatMap(r=>STG.map(x=>r[0]+'_'+x[0])),SIMF=['name','what','core','major','field','way'],REFK=['why','skills','prepIn','prepOut','hard','vow','parent'];
-function genPrompt(job,withB,lv){
+function parseJSON(t){t=String(t||'').replace(/```(?:json)?/gi,'');const a=t.indexOf('{'),b=t.lastIndexOf('}');if(a<0||b<a)throw new Error('JSON을 찾지 못했어요. 답변 전체를 붙여 넣었는지 확인해 주세요.');try{return JSON.parse(t.slice(a,b+1))}catch(e){throw new Error('JSON 형식이 맞지 않아요. ('+e.message+')')}}
+/* ===== 자동완성 수준(1~3) · 문서 저장(PDF·워드) · 보관함 ===== */
+const LVN={1:'1단계 · 중학생 눈높이',2:'2단계 · 구체적·전문적',3:'3단계 · 직업 컨설팅(고급 정보)'};
+const PROK=[['work','하는 일(상세)'],['skills','핵심 역량·도구'],['entry','진입 경로·채용 방식'],['cert','자격·면허·시험'],['outlook','전망·수요 변화'],['income','보수·근무 여건'],['risk','어려움·위험과 대비'],['roadmap','시기별 로드맵'],['sites','확인할 공식 사이트']];
+function genPrompt(job,withB,lv){lv=[1,2,3].includes(+lv)?+lv:1;
+  const spec={
+   1:`[수준 1 · 중학생 눈높이] 어려운 용어는 쉬운 말로 풀어 쓰세요. 칸마다 1~2줄(한 줄 40자 이내). 경로 A는 4~6단계에 갈림길 1개 이상. pro는 빈 객체 {} 로 두세요.`,
+   2:`[수준 2 · 구체적·전문적] 필요한 용어는 쓰되 괄호로 풀이하세요. 칸마다 2~3줄(한 줄 40자 이내), 학교 유형·전형·자격 이름을 구체적으로 쓰세요. 경로 A는 6~8단계에 갈림길 1~2개. pro는 work·skills·entry·cert 4항목만 각 2~4문장으로 채우세요(나머지는 빈 문자열).`,
+   3:`[수준 3 · 직업 컨설팅·고급 정보] 입시·자격·채용 현장을 아는 진로 컨설턴트 수준으로 쓰세요. 칸마다 3줄(한 줄 50자 이내), 전형·자격·시험 단계와 시기를 구체적으로 쓰세요. 경로 A는 8~12단계에 갈림길 2개 이상, 경로 B는 위험에 대비한 대안 경로 5~8단계. pro 9개 항목을 모두 각 3~5문장으로 채우세요. 연봉·합격률 같은 수치는 단정하지 말고 ‘범위·확인 필요’로 쓰며, 확인할 공식 사이트(커리어넷·워크넷·큐넷 등)를 sites에 적으세요.`}[lv];
   return `[GEN] 당신은 진로직업컨설턴트이자 직업정보조사전문가입니다. 중학생 수업용 ‘나의 진로경로 설계소’의 예시 자료를 만듭니다.
 직업·진로 목표: ${job}
-눈높이: ${lv}
+눈높이: ${LVN[lv]}
+${spec}
 
 [출력] 아래 구조의 JSON 하나만 출력하세요. 설명·머리말·코드펜스(\`\`\`)는 쓰지 마세요.
-{"goal":"${job}",
+{"goal":"${job}","lv":${lv},
  "cp":{"job":"${job}",
   "cells":{ ${GKEYS.map(k=>`"${k}":""`).join(', ')} },
   "cases":"관련 사례(영상·책·영화·체험·봉사) 2~3개를 줄바꿈(\\n)으로 구분",
   "sims":[{"name":"비슷한 직업","what":"하는 일","core":"핵심 능력","major":"관련학과/자격","field":"진출분야","way":"되는 길"}, 총 3개]},
  "A":{"nodes":[{"t":"step","stage":"hs|univ|cert|work|grow|etc","title":"단계 이름","memo":"조건"},{"t":"dec","q":"갈림길 질문","no":"NO일 때 이동"}, …]},
- ${withB?'"B":{"nodes":[…경로 A와 다른 플랜 B 3~6개…]},':'"B":{"nodes":[]},'}
- "ref":{"why":"","skills":"","prepIn":"","prepOut":"","hard":"","vow":""}}
+ ${withB?'"B":{"nodes":[…경로 A와 다른 플랜 B…]},':'"B":{"nodes":[]},'}
+ "ref":{"why":"","skills":"","prepIn":"","prepOut":"","hard":"","vow":""},
+ "pro":{ ${PROK.map(x=>`"${x[0]}":""`).join(', ')} }}
 
-[칸 설명] cells 키는 ‘행_단계’입니다. 행: path(경로)·req(요구조건)·qual(필요 자격)·act(학교 내외 진로활동). 단계: mid(중학교)·hs(고등학교)·univ(대학교)·post(대학 이후)·work(취직). 칸마다 1~3줄(줄바꿈 \\n), 한 줄 40자 이내, 해당 없으면 빈 문자열.
-[경로 규칙] A는 4~8개 단계에 갈림길(YES/NO) 1개 이상. stage는 hs(고등학교)·univ(대학·대학원)·cert(자격·시험·수련)·work(취업·창업)·grow(자기계발·재진학)·etc 중 하나. ref는 중학생이 쓴 것처럼 1~2문장.
+[칸 설명] cells 키는 ‘행_단계’입니다. 행: path(경로)·req(요구조건)·qual(필요 자격)·act(학교 내외 진로활동). 단계: mid(중학교)·hs(고등학교)·univ(대학교)·post(대학 이후)·work(취직). 칸마다 줄바꿈(\\n)으로 줄을 나누고, 해당 없으면 빈 문자열.
+[경로 규칙] stage는 hs(고등학교)·univ(대학·대학원)·cert(자격·시험·수련)·work(취업·창업)·grow(자기계발·재진학)·etc 중 하나. 단계 이름은 40자, 메모는 60자 이내. ref는 중학생이 쓴 것처럼 1~2문장.
 [원칙] 한국어. 제도·시험·자격은 바뀔 수 있으니 확실하지 않으면 ‘확인 필요’라고 쓰고, 연봉 등 수치와 실존 인물·기관은 단정하지 마세요.`;
 }
-function parseJSON(t){t=String(t||'').replace(/```(?:json)?/gi,'');const a=t.indexOf('{'),b=t.lastIndexOf('}');if(a<0||b<a)throw new Error('JSON을 찾지 못했어요. 답변 전체를 붙여 넣었는지 확인해 주세요.');try{return JSON.parse(t.slice(a,b+1))}catch(e){throw new Error('JSON 형식이 맞지 않아요. ('+e.message+')')}}
 function normGen(o){if(!o||typeof o!=='object')throw new Error('JSON 모양이 아니에요.');const cp=o.cp||{},cells={},S1=(v,n)=>String(Array.isArray(v)?v.join('\n'):(v==null?'':v)).slice(0,n);
   GKEYS.forEach(k=>cells[k]=S1(cp.cells&&cp.cells[k],400));
-  const nodes=a=>(Array.isArray(a)?a:[]).slice(0,12).map(n=>n&&n.t==='dec'?{t:'dec',q:S1(n.q,30),no:S1(n.no,40)}:{t:'step',stage:STAGE_KO[n&&n.stage]?n.stage:'etc',title:S1(n&&n.title,40),memo:S1(n&&n.memo,60)}).filter(n=>n.t==='dec'?filled(n.q):filled(n.title));
+  const nodes=a=>(Array.isArray(a)?a:[]).slice(0,14).map(n=>n&&n.t==='dec'?{t:'dec',q:S1(n.q,30),no:S1(n.no,40)}:{t:'step',stage:STAGE_KO[n&&n.stage]?n.stage:'etc',title:S1(n&&n.title,40),memo:S1(n&&n.memo,60)}).filter(n=>n.t==='dec'?filled(n.q):filled(n.title));
   const ref={};REFK.forEach(k=>ref[k]=S1(o.ref&&o.ref[k],400));
+  const pro={};PROK.forEach(x=>{const v=S1(o.pro&&o.pro[x[0]],900);if(filled(v))pro[x[0]]=v});
   const sims=(Array.isArray(cp.sims)?cp.sims:[]).slice(0,3).map(x=>{const r={};SIMF.forEach(f=>r[f]=S1(x&&x[f],200));return r});
-  const goal=S1(o.goal||cp.job,30);
-  return{kind:'jinro-sample',v:1,goal,cp:{job:S1(cp.job||goal,30),cells,cases:S1(cp.cases,800),read1:'',read2:'',sims},A:{nodes:nodes(o.A&&o.A.nodes)},B:{nodes:nodes(o.B&&o.B.nodes)},ref}}
+  const goal=S1(o.goal||cp.job,30),lv=[1,2,3].includes(+o.lv)?+o.lv:1;
+  return{kind:'jinro-sample',v:1,lv,goal,cp:{job:S1(cp.job||goal,30),cells,cases:S1(cp.cases,800),read1:'',read2:'',sims},A:{nodes:nodes(o.A&&o.A.nodes)},B:{nodes:nodes(o.B&&o.B.nodes)},ref,pro}}
+
+/* ----- 문서 모델: 미리보기·PDF·워드가 같은 내용을 씁니다 ----- */
+const nodeLines=(ns,goal)=>{let i=0;const o=['출발'];ns.forEach(n=>{if(n.t==='dec')o.push(`◆ 갈림길: ${n.q}  (YES → 다음 단계 / NO → ${n.no||'-'})`);else{i++;o.push(`${i}. [${STAGE_KO[n.stage]||'기타'}] ${n.title}${n.memo?' — '+n.memo:''}`)}});o.push('♥ 목표: '+goal);return o};
+function docModel(g){const B=[],d=new Date(),ds=`${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}.`;
+  B.push({h:1,t:`진로경로 설계 자료 · ${g.goal}`});
+  B.push({p:`자동완성 수준: ${LVN[g.lv||1]}  ·  저장일 ${ds}  ·  AI가 만든 초안입니다. 제도·자격·시험은 바뀔 수 있으니 공식 사이트(커리어넷·워크넷·큐넷 등)에서 확인하세요.`,small:1});
+  B.push({h:2,t:`③ 설계 실습 — 커리어패스 양식 (${g.cp.job})`});
+  B.push({table:{head:['구분',...STG.map(x=>x[1])],rows:ROWS.map(r=>[r[1],...STG.map(x=>g.cp.cells[r[0]+'_'+x[0]]||'')]),w:[9,...STG.map(()=>18)]}});
+  if(filled(g.cp.cases)){B.push({h:3,t:'관련 사례'});B.push({p:g.cp.cases})}
+  if(g.cp.sims.length){B.push({h:3,t:'비슷한 직업 3가지'});B.push({table:{head:['직업','하는 일','핵심 능력','관련학과/자격','진출분야','되는 길'],rows:g.cp.sims.map(x=>[x.name,x.what,x.core,x.major,x.field,x.way]),w:[14,20,16,18,16,16]}})}
+  B.push({h:2,t:'④ 나의 진로경로'});B.push({h:3,t:'경로 A (가장 가고 싶은 길)'});B.push({p:nodeLines(g.A.nodes,g.goal).join('\n')});
+  if(g.B.nodes.length){B.push({h:3,t:'경로 B (다른 길 · 플랜 B)'});B.push({p:nodeLines(g.B.nodes,g.goal).join('\n')})}
+  const kv=[['선택 이유',g.ref.why],['필요한 자격·역량',g.ref.skills],['학교 안 준비',g.ref.prepIn],['학교 밖 준비',g.ref.prepOut],['어려움과 극복',g.ref.hard],['한 줄 다짐',g.ref.vow],['부모님(보호자) 의견',g.ref.parent]].filter(x=>filled(x[1]));
+  if(kv.length){B.push({h:3,t:'나의 점검 글'});B.push({table:{head:['항목','내용'],rows:kv,w:[22,78]}})}
+  const pk=PROK.filter(x=>filled(g.pro&&g.pro[x[0]]));if(pk.length){B.push({h:2,t:'직업 컨설팅 정보'});B.push({table:{head:['항목','내용'],rows:pk.map(x=>[x[1],g.pro[x[0]]]),w:[22,78]}})}
+  return B}
+function docHTML(g){const B=docModel(g);const body=B.map(b=>b.h?`<h${b.h}>${esc(b.t)}</h${b.h}>`:b.p!=null?`<p class="${b.small?'s':''}">${esc(b.p).replace(/\n/g,'<br>')}</p>`:`<table><thead><tr>${b.table.head.map((h,i)=>`<th style="width:${b.table.w[i]}%">${esc(h)}</th>`).join('')}</tr></thead><tbody>${b.table.rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c).replace(/\n/g,'<br>')}</td>`).join('')}</tr>`).join('')}</tbody></table>`).join('');
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>진로경로_${esc(g.goal)}</title><style>@page{size:A4 landscape;margin:12mm}body{font-family:'Malgun Gothic','맑은 고딕','Noto Sans KR','Noto Sans CJK KR',sans-serif;font-size:11pt;line-height:1.5;color:#111}h1{font-size:19pt;margin:0 0 6px;color:#0f6b4d}h2{font-size:14pt;margin:16px 0 6px;color:#0f6b4d;border-bottom:2px solid #0f6b4d}h3{font-size:12pt;margin:12px 0 4px}p{margin:4px 0}p.s{font-size:9.5pt;color:#555}table{border-collapse:collapse;width:100%;table-layout:fixed;margin:4px 0 8px}th,td{border:1px solid #888;padding:4px 6px;vertical-align:top;font-size:10pt;word-break:keep-all;overflow-wrap:anywhere}th{background:#e6f2ec}tr{page-break-inside:avoid}</style></head><body>${body}</body></html>`}
+function printHTML(html){const f=document.createElement('iframe');f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(f);const d=f.contentWindow.document;d.open();d.write(html);d.close();setTimeout(()=>{try{f.contentWindow.focus();f.contentWindow.print()}catch(e){toast('인쇄 창을 열지 못했어요.')}setTimeout(()=>f.remove(),60000)},400)}
+
+/* ----- 워드(.docx) 만들기: 외부 도구 없이 직접 묶음(zip) ----- */
+const CRC_T=(()=>{const t=[];for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0}return t})();
+const crc32=u=>{let c=0xFFFFFFFF;for(let i=0;i<u.length;i++)c=CRC_T[(c^u[i])&255]^(c>>>8);return(c^0xFFFFFFFF)>>>0};
+function zipStore(files){const enc=new TextEncoder(),parts=[],cen=[];let off=0;
+  files.forEach(f=>{const nm=enc.encode(f.name),d=enc.encode(f.data),crc=crc32(d),h=new DataView(new ArrayBuffer(30));
+    h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(8,0,true);h.setUint16(10,0,true);h.setUint16(12,0x21,true);h.setUint32(14,crc,true);h.setUint32(18,d.length,true);h.setUint32(22,d.length,true);h.setUint16(26,nm.length,true);h.setUint16(28,0,true);
+    parts.push(new Uint8Array(h.buffer),nm,d);
+    const c=new DataView(new ArrayBuffer(46));c.setUint32(0,0x02014b50,true);c.setUint16(4,20,true);c.setUint16(6,20,true);c.setUint16(8,0x0800,true);c.setUint16(10,0,true);c.setUint16(12,0,true);c.setUint16(14,0x21,true);c.setUint32(16,crc,true);c.setUint32(20,d.length,true);c.setUint32(24,d.length,true);c.setUint16(28,nm.length,true);c.setUint32(42,off,true);
+    cen.push(new Uint8Array(c.buffer),nm);off+=30+nm.length+d.length});
+  const cl=cen.reduce((s,x)=>s+x.length,0),e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cl,true);e.setUint32(16,off,true);
+  return new Blob([...parts,...cen,new Uint8Array(e.buffer)],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'})}
+const xe=s=>String(s==null?'':s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'');
+function docxBlob(g){const B=docModel(g),W=15400;
+  const rp=(o={})=>`<w:rPr><w:rFonts w:ascii="Malgun Gothic" w:hAnsi="Malgun Gothic" w:eastAsia="맑은 고딕" w:cs="Malgun Gothic"/>${o.b?'<w:b/>':''}${o.c?`<w:color w:val="${o.c}"/>`:''}<w:sz w:val="${o.sz||21}"/></w:rPr>`;
+  const runs=(t,o)=>String(t==null?'':t).split('\n').map((ln,i)=>`${i?'<w:r><w:br/></w:r>':''}<w:r>${rp(o)}<w:t xml:space="preserve">${xe(ln)}</w:t></w:r>`).join('');
+  const para=(t,o={},ppr='',post='')=>`<w:p><w:pPr>${ppr}<w:spacing w:before="${o.before||0}" w:after="${o.after==null?80:o.after}" w:line="300" w:lineRule="auto"/>${post}</w:pPr>${runs(t,o)}</w:p>`;
+  const cell=(t,w,hd)=>`<w:tc><w:tcPr><w:tcW w:w="${w}" w:type="dxa"/>${hd?'<w:shd w:val="clear" w:color="auto" w:fill="E6F2EC"/>':''}</w:tcPr>${para(t,{b:hd,sz:19,after:20})}</w:tc>`;
+  const tbl=T=>{const ws=T.w.map(x=>Math.round(W*x/100));const bd=['top','left','bottom','right','insideH','insideV'].map(k=>`<w:${k} w:val="single" w:sz="4" w:space="0" w:color="888888"/>`).join('');
+    return `<w:tbl><w:tblPr><w:tblW w:w="${W}" w:type="dxa"/><w:tblBorders>${bd}</w:tblBorders><w:tblLayout w:type="fixed"/><w:tblCellMar><w:left w:w="90" w:type="dxa"/><w:right w:w="90" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid>${ws.map(x=>`<w:gridCol w:w="${x}"/>`).join('')}</w:tblGrid><w:tr><w:trPr><w:tblHeader/></w:trPr>${T.head.map((h,i)=>cell(h,ws[i],1)).join('')}</w:tr>${T.rows.map(r=>`<w:tr><w:trPr><w:cantSplit/></w:trPr>${r.map((c,i)=>cell(c,ws[i],0)).join('')}</w:tr>`).join('')}</w:tbl>${para('',{after:60})}`};
+  const body=B.map(b=>b.h?para(b.t,{b:1,sz:b.h===1?36:b.h===2?28:24,c:b.h<3?'0F6B4D':'111111',before:b.h===1?0:200,after:100},'<w:keepNext/>',`<w:outlineLvl w:val="${b.h-1}"/>`):b.p!=null?para(b.p,{sz:b.small?18:21,c:b.small?'555555':null}):tbl(b.table)).join('');
+  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${body}<w:sectPr><w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/><w:pgMar w:top="720" w:right="720" w:bottom="720" w:left="720" w:header="400" w:footer="400" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  const ct=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>`;
+  const rel=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>`;
+  return zipStore([{name:'[Content_Types].xml',data:ct},{name:'_rels/.rels',data:rel},{name:'word/document.xml',data:doc}])}
+function dlBlob(name,blob){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
+const safeName=s=>String(s||'자료').replace(/[\\/:*?"<>|\s]+/g,'_').slice(0,30);
+
+/* ----- 보관함 (폴더/하위폴더 누적 저장) ----- */
+let LIB=[],LIBF='',LIBMAX=500,LIBMSG='';
+const fixFolder=v=>{const p=String(v||'').split('/').map(x=>x.replace(/[\\\r\n\t]/g,' ').trim().slice(0,20)).filter(Boolean).slice(0,3);return p.length?p.join('/'):'미분류'};
+async function libLoad(){try{const r=await A('pathLibList');LIB=r.items||[];LIBMAX=r.max||500;LIBMSG=''}catch(e){LIB=[];LIBMSG=e.code==='bad_action'?'보관함 기능은 서버(Path_api.gs)를 새 버전으로 배포해야 쓸 수 있어요.':(e.message||'보관함을 불러오지 못했어요.')}libShow()}
+function libShow(){const o=$('#libBox');if(!o)return;
+  const fs=[...new Set(LIB.map(x=>x.folder))].sort();const cnt=f=>LIB.filter(x=>x.folder===f||x.folder.indexOf(f+'/')===0).length;
+  const tree=[...new Set(fs.flatMap(f=>f.split('/').map((_,i,a)=>a.slice(0,i+1).join('/'))))].sort();
+  const list=LIB.filter(x=>!LIBF||x.folder===LIBF||x.folder.indexOf(LIBF+'/')===0);
+  o.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h2>보관함 · 누적 저장 <span class="muted small">(${LIB.length}/${LIBMAX}건)</span></h2><span class="row"><button class="btn ghost sm" data-act="libreload">새로 불러오기</button><button class="btn ghost sm" data-act="libbackup">보관함 전체 내려받기(.json)</button></span></div>
+  <p class="sub">저장한 자료를 폴더·하위폴더(예: <b>교육/교사</b>)로 나눠 쌓아 두고, 필요할 때 <b>불러오기·PDF·워드·JSON</b>으로 다시 꺼내 쓸 수 있어요. 자료는 구글 시트 <code>경로_보관함</code> 탭에 저장돼요(교사 코드가 있어야 열려요).</p>
+  ${LIBMSG?`<div class="note">${esc(LIBMSG)}</div>`:''}
+  <div class="row" style="margin:6px 0"><button class="btn ${LIBF?'ghost':''} sm" data-act="libfolder" data-f="">전체</button>${tree.map(f=>`<button class="btn ${LIBF===f?'':'ghost'} sm" data-act="libfolder" data-f="${esc(f)}" style="margin-left:${(f.split('/').length-1)*10}px">📁 ${esc(f.split('/').pop())} <span class="muted">${cnt(f)}</span></button>`).join('')}</div>
+  ${list.length?table([['제목'],['폴더'],['수준','n'],['저장','n'],['꺼내기']],list.map(x=>`<tr><td class="w"><b>${esc(x.title)}</b><br><span class="muted small">${esc(x.job)}</span></td><td>${esc(x.folder)}</td><td class="n">${x.lv}단계</td><td class="n">${fmtAt(x.at)}</td><td><span class="row"><button class="btn sm" data-act="libopen" data-id="${esc(x.id)}">불러오기</button><button class="btn ghost sm" data-act="libpdf" data-id="${esc(x.id)}">PDF</button><button class="btn ghost sm" data-act="libdocx" data-id="${esc(x.id)}">워드</button><button class="btn ghost sm" data-act="libjson" data-id="${esc(x.id)}">JSON</button><button class="btn ghost sm" data-act="libmove" data-id="${esc(x.id)}">이동·이름</button><button class="btn ghost sm" data-act="libdel" data-id="${esc(x.id)}">삭제</button></span></td></tr>`)):`<p class="muted">${LIB.length?'이 폴더에는 아직 자료가 없어요.':'아직 저장한 자료가 없어요. 위에서 자동완성한 뒤 ‘보관함에 저장’을 눌러 보세요.'}</p>`}</div>`}
+async function libGet(id){const r=await A('pathLibGet',{id});return normGen(parseJSON(r.json))}
+async function libAct(act,a){const id=a.dataset.id,it=LIB.find(x=>x.id===id);
+  if(act==='libreload'){await libLoad();toast('보관함을 새로 불러왔어요.');return}
+  if(act==='libfolder'){LIBF=a.dataset.f||'';libShow();return}
+  if(act==='libbackup'){const items=[];for(const x of LIB){try{const r=await A('pathLibGet',{id:x.id});items.push({folder:x.folder,title:x.title,job:x.job,lv:x.lv,at:x.at,data:JSON.parse(r.json)})}catch(e){}}dl(`진로경로_보관함_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify({kind:'jinro-library',v:1,items},null,1),'json');toast('보관함 전체를 내려받았어요.');return}
+  if(!it)return;
+  try{
+   if(act==='libopen'){genSet(await libGet(id));$('#gJob').value=GEN.goal;$('#gFolder')&&($('#gFolder').value=it.folder);$('#gTitle')&&($('#gTitle').value=it.title);window.scrollTo({top:0,behavior:'smooth'});toast('불러왔어요. 위 미리보기를 확인하세요.')}
+   else if(act==='libpdf'){printHTML(docHTML(await libGet(id)));toast('인쇄 창에서 ‘PDF로 저장’을 고르세요.')}
+   else if(act==='libdocx'){const g=await libGet(id);dlBlob(`진로경로_${safeName(g.goal)}_${g.lv}단계.docx`,docxBlob(g))}
+   else if(act==='libjson'){const g=await libGet(id);dl(`진로경로_예시_${g.goal}.json`,JSON.stringify(g,null,1),'json')}
+   else if(act==='libmove'){const f=prompt('폴더 이름(하위 폴더는 / 로 이어 써요. 예: 교육/교사)',it.folder);if(f===null)return;const t=prompt('제목',it.title);if(t===null)return;await A('pathLibMove',{id,folder:fixFolder(f),title:t});await libLoad();toast('옮겼어요.')}
+   else if(act==='libdel'){if(!confirm(`‘${it.title}’을(를) 보관함에서 지울까요? 되돌릴 수 없어요.`))return;await A('pathLibDel',{id});await libLoad();toast('지웠어요.')}
+  }catch(er){toast(er.message||'처리하지 못했어요.')}}
+async function libSave(){if(!GEN){toast('먼저 자동완성 결과를 만들어 주세요.');return}
+  const folder=fixFolder($('#gFolder').value),title=($('#gTitle').value.trim()||`${GEN.goal} (${GEN.lv}단계)`).slice(0,60),json=JSON.stringify(GEN);
+  if(json.length>30000){toast('내용이 너무 길어 저장할 수 없어요. 일부를 줄여 주세요.');return}
+  const same=LIB.find(x=>x.folder===folder&&x.title===title);let id='';
+  if(same&&confirm('같은 폴더에 같은 제목이 있어요. 덮어쓸까요? (취소하면 새 자료로 따로 저장해요)'))id=same.id;
+  try{await A('pathLibSave',{id,folder,title,job:GEN.goal,lv:GEN.lv||1,json});toast(`보관함 ‘${folder}’에 저장했어요.`);await libLoad()}catch(er){toast(er.code==='bad_action'?'서버(Path_api.gs)를 새 버전으로 배포한 뒤 쓸 수 있어요.':(er.message||'저장하지 못했어요.'))}}
+
 function vGen(){return `<div class="card"><h2>AI로 ③ 설계 실습 · ④ 나의 진로경로 자동 완성</h2>
   <p class="sub">직업명이나 진로 목표를 넣으면 AI가 ③ 커리어패스 양식(20칸·관련 사례·비슷한 직업 3개)과 ④ 경로 A·B, 점검 글을 채워 줘요. 수업 시범 자료로 쓰거나, 내려받은 파일을 학생 앱 ‘불러오기’에 넣으면 학생 화면에도 채워져요. <b>AI 결과는 제도·자격이 최신이 아닐 수 있으니 공식 사이트로 꼭 확인</b>하세요.</p>
   <div class="row"><input type="text" id="gJob" class="inl" style="flex:1 1 220px;min-width:180px" maxlength="30" placeholder="직업명 또는 진로 목표 (예: 수의사, 웹툰 작가, 소방관)" value="${esc(GEN?GEN.goal:'')}">
-  <select id="gLv" class="inl"><option>중학생이 이해하기 쉬운 말로</option><option>조금 더 구체적·전문적으로</option></select>
+  <select id="gLv" class="inl" title="자동완성 수준"><option value="1">1단계 · 중학생이 이해하기 쉬운 말로</option><option value="2">2단계 · 조금 더 구체적·전문적으로</option><option value="3">3단계 · 직업 컨설팅 수준(고급 정보 포함)</option></select>
   <label class="row small"><input type="checkbox" id="gB" checked> 경로 B(플랜 B) 포함</label></div>
   <div class="row" style="margin-top:8px"><button class="btn" data-act="gen">AI로 채우기</button><button class="btn ghost" data-act="genprompt">요청글만 복사 (외부 AI용)</button></div>
   <h3>AI 키 없이 쓰려면</h3><p class="sub">‘요청글만 복사’ → Claude 등 AI에 붙여 넣기 → 나온 답변(JSON)을 아래 칸에 붙여 넣고 ‘붙여넣은 답변 적용’을 눌러요. 아래 칸의 JSON을 직접 고친 뒤 다시 적용해도 돼요.</p>
   <textarea id="gPaste" style="min-height:120px;font-family:monospace;font-size:12.5px" placeholder="여기에 AI 답변(JSON)을 붙여 넣거나, 생성 결과를 고쳐요."></textarea>
   <div class="row" style="margin-top:6px"><button class="btn ghost sm" data-act="genapply">붙여넣은 답변 적용</button></div></div>
-  <div id="gOut"></div>`}
+  <div id="gOut"></div><div id="libBox"></div>`}
 function genShow(){const o=$('#gOut');if(!o)return;if(!GEN){o.innerHTML='';return}
-  const g=GEN,ft=`<div class="tbl"><table><thead><tr><th>구분</th>${STG.map(x=>`<th>${x[1]}</th>`).join('')}</tr></thead><tbody>${ROWS.map(r=>`<tr><td><b>${r[1]}</b></td>${STG.map(x=>`<td class="w">${esc(g.cp.cells[r[0]+'_'+x[0]]||'')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const g=GEN,pro=PROK.filter(x=>filled(g.pro&&g.pro[x[0]])).map(x=>`<tr><th>${x[1]}</th><td class="w">${esc(g.pro[x[0]])}</td></tr>`).join(''),ft=`<div class="tbl"><table><thead><tr><th>구분</th>${STG.map(x=>`<th>${x[1]}</th>`).join('')}</tr></thead><tbody>${ROWS.map(r=>`<tr><td><b>${r[1]}</b></td>${STG.map(x=>`<td class="w">${esc(g.cp.cells[r[0]+'_'+x[0]]||'')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   const sims=g.cp.sims.map((x,i)=>`<div class="note"><b>직업 ${i+1} ${esc(x.name)}</b><br>하는 일: ${esc(x.what)}<br>핵심 능력: ${esc(x.core)}<br>관련학과/자격: ${esc(x.major)} · 진출분야: ${esc(x.field)}<br>되는 길: ${esc(x.way)}</div>`).join('');
   const kv=[['선택 이유',g.ref.why],['필요한 자격·역량',g.ref.skills],['학교 안 준비',g.ref.prepIn],['학교 밖 준비',g.ref.prepOut],['어려움과 극복',g.ref.hard],['한 줄 다짐',g.ref.vow],['부모님(보호자) 의견',g.ref.parent]].filter(x=>filled(x[1])).map(x=>`<tr><th>${x[0]}</th><td class="w">${esc(x[1])}</td></tr>`).join('');
-  o.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h2>미리보기 · ${esc(g.goal)}</h2><span class="row"><button class="btn sm" data-act="gendl">학생 앱용 파일 저장(.json)</button><button class="btn ghost sm" data-act="gencopy">JSON 복사</button></span></div>
+  o.innerHTML=`<div class="card"><div class="row" style="justify-content:space-between"><h2>미리보기 · ${esc(g.goal)}</h2><span class="row"><button class="btn sm" data-act="gendl">학생 앱용 파일(.json)</button><button class="btn sm" data-act="genpdf">PDF 저장</button><button class="btn sm" data-act="gendocx">워드 저장(.docx)</button><button class="btn ghost sm" data-act="gencopy">JSON 복사</button></span></div>
+  <p class="small muted">자동완성 수준: <b>${esc(LVN[g.lv||1])}</b> · PDF는 인쇄 창에서 ‘PDF로 저장’을 고르세요. 한글(HWP)은 워드 파일을 한글에서 열어 ‘다른 이름으로 저장’하면 돼요.</p>
   <p class="sub">학생 앱 ⑤ 제출하기 또는 ③·④ 아래 ‘📂 불러오기’에 이 파일을 넣으면 학생이 자기 앱에서 시범 자료를 열어 볼 수 있어요. (학생 정보는 바뀌지 않아요)</p>
   <h3>③ 설계 실습 — 커리어패스 양식 (${esc(g.cp.job)})</h3>${ft}${filled(g.cp.cases)?`<p class="small" style="white-space:pre-wrap"><b>관련 사례</b>\n${esc(g.cp.cases)}</p>`:''}${sims?`<div class="two">${sims}</div>`:''}
-  <h3>④ 나의 진로경로</h3><b>경로 A</b>${flowHTML(g.A.nodes,g.goal)}${g.B.nodes.length?`<b>경로 B</b>${flowHTML(g.B.nodes,g.goal)}`:''}${kv?`<div class="tbl" style="margin-top:8px"><table><tbody>${kv}</tbody></table></div>`:''}</div>`}
+  <h3>④ 나의 진로경로</h3><b>경로 A</b>${flowHTML(g.A.nodes,g.goal)}${g.B.nodes.length?`<b>경로 B</b>${flowHTML(g.B.nodes,g.goal)}`:''}${kv?`<div class="tbl" style="margin-top:8px"><table><tbody>${kv}</tbody></table></div>`:''}${pro?`<h3>직업 컨설팅 정보</h3><div class="tbl"><table><tbody>${pro}</tbody></table></div>`:''}
+  <div class="note" style="margin-top:10px"><b>보관함에 저장</b> <span class="muted small">(폴더는 / 로 이어 쓰면 하위 폴더가 돼요. 예: 교육/교사)</span><div class="row" style="margin-top:6px"><input type="text" id="gFolder" class="inl" list="gFolders" maxlength="60" placeholder="폴더 (예: 교육/교사)" value="${esc(LIBF||'')}"><datalist id="gFolders">${[...new Set(LIB.map(x=>x.folder))].map(f=>`<option value="${esc(f)}">`).join('')}</datalist><input type="text" id="gTitle" class="inl" style="flex:1 1 200px" maxlength="60" placeholder="제목 (비우면 직업명+단계)"><button class="btn" data-act="libsave">보관함에 저장</button></div></div></div>`}
 function genSet(o){GEN=normGen(o);const t=$('#gPaste');if(t)t.value=JSON.stringify(GEN,null,1);genShow()}
 
 /* ===== AI 검증·보완·개선·조언 (학생별) ===== */
@@ -282,9 +375,13 @@ const cpy=async t=>{try{await navigator.clipboard.writeText(t);return true}catch
 const aiErr=er=>toast(er.code==='ai_off'?er.message+' (시트 메뉴 ② AI 키 입력 후 사용하세요. 외부 AI용 요청글 복사도 쓸 수 있어요.)':(er.message||'AI를 부르지 못했어요.'));
 async function aiActs(a,act){
   if(act==='gen'){const job=$('#gJob').value.trim();if(!job){toast('직업명이나 진로 목표를 먼저 적어 주세요.');return true}a.disabled=true;a.textContent='AI가 채우는 중… (30~60초)';
-    try{const r=await A('pathAi',{turns:[{role:'user',content:genPrompt(job,$('#gB').checked,$('#gLv').value)}],maxTokens:6000});if(r.truncated)toast('답이 길어서 끝이 잘렸어요. 다시 눌러 주세요.');genSet(parseJSON(r.text));toast('채웠어요. 미리보기를 확인하세요.')}catch(er){er.code?aiErr(er):toast(er.message)}finally{a.disabled=false;a.textContent='AI로 채우기'}return true}
+    try{const r=await A('pathAi',{turns:[{role:'user',content:genPrompt(job,$('#gB').checked,$('#gLv').value)}],maxTokens:[0,6000,7500,8000][+$('#gLv').value||1]});if(r.truncated)toast('답이 길어서 끝이 잘렸어요. 다시 눌러 주세요.');{const o=parseJSON(r.text);if(!o.lv)o.lv=+$('#gLv').value||1;genSet(o)}toast('채웠어요. 미리보기를 확인하세요.')}catch(er){er.code?aiErr(er):toast(er.message)}finally{a.disabled=false;a.textContent='AI로 채우기'}return true}
   if(act==='genprompt'){const job=$('#gJob').value.trim();if(!job){toast('직업명이나 진로 목표를 먼저 적어 주세요.');return true}toast(await cpy(genPrompt(job,$('#gB').checked,$('#gLv').value))?'요청글을 복사했어요. AI에 붙여 넣으세요.':'복사하지 못했어요.');return true}
-  if(act==='genapply'){try{genSet(parseJSON($('#gPaste').value));toast('적용했어요.')}catch(er){toast(er.message)}return true}
+  if(act==='genapply'){try{const o=parseJSON($('#gPaste').value);if(!o.lv)o.lv=+$('#gLv').value||1;genSet(o);toast('적용했어요.')}catch(er){toast(er.message)}return true}
+  if(act==='genpdf'){if(GEN){printHTML(docHTML(GEN));toast('인쇄 창에서 ‘PDF로 저장’을 고르세요.')}return true}
+  if(act==='gendocx'){if(GEN)dlBlob(`진로경로_${safeName(GEN.goal)}_${GEN.lv||1}단계.docx`,docxBlob(GEN));return true}
+  if(act==='libsave'){await libSave();return true}
+  if(act&&act.indexOf('lib')===0){await libAct(act,a);return true}
   if(act==='gencopy'){if(GEN)toast(await cpy(JSON.stringify(GEN,null,1))?'JSON을 복사했어요.':'복사하지 못했어요.');return true}
   if(act==='gendl'){if(GEN)dl(`진로경로_예시_${GEN.goal||'직업'}.json`,JSON.stringify(GEN,null,1),'json');return true}
   if(act==='rvprompt'||act==='rvrun'){const p=prep(DATA.rows).find(x=>x.uid===a.dataset.uid);if(!p)return true;const q=reviewPrompt(p,$('#rvAnon').checked);
@@ -295,7 +392,7 @@ async function aiActs(a,act){
   return false}
 
 /* ===== 그리기·이벤트 ===== */
-function render(){const P=cur();$('#view').innerHTML={status:vStatus,stats:vStats,form:vForm,stu:vStu,gen:vGen,ai:vAi}[TAB](P);if(TAB==='gen')genShow();$('#tabs').innerHTML=TABS.map(([k,l])=>`<button class="tab" role="tab" aria-selected="${k===TAB}" data-tab="${k}">${l}</button>`).join('');
+function render(){const P=cur();$('#view').innerHTML={status:vStatus,stats:vStats,form:vForm,stu:vStu,gen:vGen,ai:vAi}[TAB](P);if(TAB==='gen'){genShow();libShow();if(!window.__libOk){window.__libOk=1;libLoad()}}$('#tabs').innerHTML=TABS.map(([k,l])=>`<button class="tab" role="tab" aria-selected="${k===TAB}" data-tab="${k}">${l}</button>`).join('');
   const cl=[...new Set(DATA.rows.map(clsKey))].sort((a,b)=>{const[x,y]=a.split('-').map(Number),[u,w]=b.split('-').map(Number);return x-u||y-w});const sel=$('#fClass');sel.innerHTML='<option value="all">전체 학급</option>'+cl.map(c=>`<option value="${c}">${c.replace('-','학년 ')}반</option>`).join('');sel.value=CLS}
 document.addEventListener('click',async e=>{
   const t=e.target.closest('[data-tab]');if(t){TAB=t.dataset.tab;render();return}
@@ -325,11 +422,16 @@ $('#lform').addEventListener('submit',async e=>{e.preventDefault();const code=$(
   if(saved){AUTH={tcode:saved};try{const me=await A('pathMe');if(me.role==='teacher'){await enter();return}}catch(_){}AUTH={}}showLogin('')})();
 
 /* ===== 예시 데이터 (#demo) ===== */
-function demoApi(a,p){if(!window.__d)window.__d=genDemo();const D=window.__d;
+function demoApi(a,p){if(!window.__d)window.__d=genDemo();const D=window.__d;const L=window.__lib||(window.__lib=[]);
+  if(a==='pathLibList')return{items:L.map(x=>({id:x.id,folder:x.folder,title:x.title,job:x.job,lv:x.lv,at:x.at})),max:500};
+  if(a==='pathLibGet'){const x=L.find(y=>y.id===p.id);if(!x)throw Object.assign(new Error('찾지 못했어요.'),{code:'not_found'});return{id:x.id,json:x.json}}
+  if(a==='pathLibSave'){let x=p.id&&L.find(y=>y.id===p.id);if(!x){x={id:'L'+Date.now().toString(36)+L.length};L.push(x)}Object.assign(x,{folder:p.folder,title:p.title,job:p.job,lv:p.lv,json:p.json,at:Date.now()});return{ok:true,id:x.id}}
+  if(a==='pathLibMove'){const x=L.find(y=>y.id===p.id);if(x){if(p.folder!=null)x.folder=p.folder;if(p.title)x.title=p.title}return{ok:true}}
+  if(a==='pathLibDel'){const i=L.findIndex(y=>y.id===p.id);if(i>=0)L.splice(i,1);return{ok:true}}
   if(a==='pathMe')return{role:'teacher'};if(a==='pathList')return{rows:D};
   if(a==='pathNote'){const r=D.find(x=>x.uid===p.uid);if(r){r.note=p.note;r.ok=p.ok}return{ok:true}}
-  if(a==='pathAi'){const q=(p.turns&&p.turns[0]&&p.turns[0].content)||'';if(q.indexOf('[GEN]')===0){const job=(q.match(/직업·진로 목표: (.*)/)||[])[1]||'예시 직업';return{text:demoGen(job)}}if(q.indexOf('[REVIEW]')===0)return{text:'1. 검증\n- 단계 순서: 맞음\n- 자격·시험: 확인 필요 (공식 사이트 확인)\n\n2. 보완\n일반고 → 대학교 → 국가시험 → 취업\n\n3. 개선 질문\n- 이 직업을 선택한 가장 큰 이유는?\n\n4. 학생에게 줄 조언\n(예시 화면) 실제 서버에서는 AI 결과가 나와요.\n\n5. 교사 메모\n(예시)'};return{text:'(예시 화면) 실제 서버에서는 AI 분석 결과가 여기에 나와요.'}}return{}}
-function demoGen(job){const c={};ROWS.forEach(r=>STG.forEach(x=>c[r[0]+'_'+x[0]]=(r[0]==='path'?['일반중학교','일반고·특성화고','4년제 대학교 관련 학과','대학원·수련','취업(예시)'][STG.indexOf(x)]:r[1]+' 예시')));return JSON.stringify({goal:job,cp:{job,cells:c,cases:'관련 책 읽기\n직업 체험 신청',sims:[{name:'비슷한 직업 1',what:'예시',core:'예시',major:'예시',field:'예시',way:'예시'},{name:'비슷한 직업 2',what:'예시',core:'예시',major:'예시',field:'예시',way:'예시'},{name:'비슷한 직업 3',what:'예시',core:'예시',major:'예시',field:'예시',way:'예시'}]},A:{nodes:[{t:'step',stage:'hs',title:'일반고 진학'},{t:'step',stage:'univ',title:'관련 학과 진학'},{t:'dec',q:'진학 여부',no:'바로 취업'},{t:'step',stage:'cert',title:'국가자격시험 합격'},{t:'step',stage:'work',title:'취업'}]},B:{nodes:[{t:'step',stage:'work',title:'취업'},{t:'step',stage:'grow',title:'방송통신대 진학'}]},ref:{why:'(예시) 좋아하는 일이라서',skills:'(예시)',prepIn:'(예시)',prepOut:'(예시)',hard:'(예시)',vow:'(예시)'}})}
+  if(a==='pathAi'){const q=(p.turns&&p.turns[0]&&p.turns[0].content)||'';if(q.indexOf('[GEN]')===0){const job=(q.match(/직업·진로 목표: (.*)/)||[])[1]||'예시 직업';return{text:demoGen(job,+((q.match(/\[수준 (\d)/)||[])[1])||1)}}if(q.indexOf('[REVIEW]')===0)return{text:'1. 검증\n- 단계 순서: 맞음\n- 자격·시험: 확인 필요 (공식 사이트 확인)\n\n2. 보완\n일반고 → 대학교 → 국가시험 → 취업\n\n3. 개선 질문\n- 이 직업을 선택한 가장 큰 이유는?\n\n4. 학생에게 줄 조언\n(예시 화면) 실제 서버에서는 AI 결과가 나와요.\n\n5. 교사 메모\n(예시)'};return{text:'(예시 화면) 실제 서버에서는 AI 분석 결과가 여기에 나와요.'}}return{}}
+function demoGen(job,lv){const c={};ROWS.forEach(r=>STG.forEach(x=>c[r[0]+'_'+x[0]]=(r[0]==='path'?['일반중학교','일반고·특성화고','4년제 대학교 관련 학과','대학원·수련','취업(예시)'][STG.indexOf(x)]:r[1]+' 예시')));return JSON.stringify({goal:job,lv:lv||1,pro:lv>=2?Object.fromEntries(PROK.slice(0,lv>=3?9:4).map(x=>[x[0],'(예시) '+x[1]+' 내용'])):{},cp:{job,cells:c,cases:'관련 책 읽기\n직업 체험 신청',sims:[{name:'비슷한 직업 1',what:'예시',core:'예시',major:'예시',field:'예시',way:'예시'},{name:'비슷한 직업 2',what:'예시',core:'예시',major:'예시',field:'예시',way:'예시'},{name:'비슷한 직업 3',what:'예시',core:'예시',major:'예시',field:'예시',way:'예시'}]},A:{nodes:[{t:'step',stage:'hs',title:'일반고 진학'},{t:'step',stage:'univ',title:'관련 학과 진학'},{t:'dec',q:'진학 여부',no:'바로 취업'},{t:'step',stage:'cert',title:'국가자격시험 합격'},{t:'step',stage:'work',title:'취업'}]},B:{nodes:[{t:'step',stage:'work',title:'취업'},{t:'step',stage:'grow',title:'방송통신대 진학'}]},ref:{why:'(예시) 좋아하는 일이라서',skills:'(예시)',prepIn:'(예시)',prepOut:'(예시)',hard:'(예시)',vow:'(예시)'}})}
 function genDemo(){let s=11;const rnd=()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};const pick=a=>a[Math.floor(rnd()*a.length)];
   const names=['가온','나린','다솜','라온','마루','보라','사랑','아름','이든','지안','하준','서윤','도현','예준','유나','시우','채원','민재','수아','주원','태윤','하린','은우','재이'];
   const jobs=['수의사','웹툰 작가','간호사','프로그래머','교사','요리사','게임 개발자','디자이너','의사','경찰관'];
